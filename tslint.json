@@ -1,4 +1,8 @@
 {
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
-  "defaultSeverity": "error"
+  "defaultSeverity": "error",
+  "rules": {
+      "interface-name": false,
+      "object-literal-sort-keys": false
+  }
 }
