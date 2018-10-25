@@ -7,12 +7,16 @@
   "license": "MIT",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack-dev-server --open"
+    "dev": "webpack-dev-server --open",
+    "ws": "ts-node ./src/game/wordsearch/test.ts"
   },
   "devDependencies": {
+    "@types/deepmerge": "^2.2.0",
+    "@types/node": "^10.12.0",
     "html-webpack-plugin": "^3.2.0",
     "prettier": "^1.14.3",
     "ts-loader": "^5.2.2",
+    "ts-node": "^7.0.1",
     "tslint": "^5.11.0",
     "tslint-config-prettier": "^1.15.0",
     "tslint-react": "^3.6.0",
@@ -22,11 +26,13 @@
     "webpack-dev-server": "^3.1.10"
   },
   "dependencies": {
+    "deepmerge": "^2.2.1",
     "react": "^16.6.0",
     "react-dom": "^16.6.0",
     "react-redux": "^5.0.7",
     "redux": "^4.0.1",
     "redux-form": "^7.4.2",
-    "redux-thunk": "^2.3.0"
+    "redux-thunk": "^2.3.0",
+    "wordlist-english": "^1.2.1"
   }
 }
