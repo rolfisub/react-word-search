@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server --open",
-    "ws": "ts-node ./src/game/wordsearch/test.ts"
+    "ws": "ts-node --no-cache ./src/game/wordsearch/test.ts"
   },
   "devDependencies": {
     "@types/deepmerge": "^2.2.0",

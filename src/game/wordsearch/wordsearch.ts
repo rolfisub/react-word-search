@@ -27,19 +27,9 @@ interface WordsConfig {
    */
   maxLength: number;
   /**
-   * should the engine generate a board only
-   * if strictly all the words fit, if false it will try
-   * to fit as many as it can
-   */
-  strict: boolean;
-  /**
    * list of words to pick from
    */
   dictionary: string[];
-  /**
-   * pick random?
-   */
-  random: boolean;
 }
 
 export interface WordsearchInput {
@@ -64,6 +54,11 @@ export interface WordsearchOutput {
   words: string[];
 }
 
+export interface ValidationMsg {
+  valid: boolean;
+  msg: string;
+}
+
 const commonEnglishWords = [
   ...wordlist["english/american/10"],
   ...wordlist["english/american/20"],
@@ -82,12 +77,10 @@ export class Wordsearch {
   protected defaultConfig: WordsearchInput = {
     size: 8,
     wordsConfig: {
-      amount: 200,
+      amount: 40,
       minLength: 2,
       maxLength: 6,
-      strict: false,
-      dictionary: [...commonEnglishWords],
-      random: true
+      dictionary: [...commonEnglishWords]
     },
     allowedDirections: [
       WordsearchDirections.DOWN,
@@ -114,7 +107,8 @@ export class Wordsearch {
 
   public generate = (config?: Partial<WordsearchInput>): WordsearchOutput => {
     this.setConfig(config);
-    if (this.validConfig()) {
+    const valid = this.validConfig();
+    if (valid.valid) {
       try {
         const words = this.getRandomWordsFromDictionary();
         const o = {
@@ -128,16 +122,70 @@ export class Wordsearch {
         throw new Error("Failed to create game: " + e.toString());
       }
     } else {
-      throw new Error("Invalid configuration.");
+      throw new Error("Invalid configuration: " + valid.msg);
     }
   };
 
   /**
-   * TODO: validate configuration
-   * @returns {boolean}
+   * validates a config input before generating a new game
+   * @returns {Partial<ValidationMsg>}
    */
-  private validConfig = (): boolean => {
-    return true;
+  private validConfig = (): Partial<ValidationMsg> => {
+    const invalid: ValidationMsg = {
+      valid: false,
+      msg: ""
+    };
+    //check size of board
+    if (this.config.size < 6 || this.config.size > 50) {
+      invalid.msg = "Board size must be between 6 and 50";
+      return invalid;
+    }
+
+    //check that amount of words are between 1 and 50
+    const wc = this.config.wordsConfig;
+    if (wc.amount < 1 || wc.amount > 50) {
+      invalid.msg = "Amount of words must be between 1 and 50.";
+      return invalid;
+    }
+
+    //check that word size is less than board size
+    if (wc.minLength > this.config.size) {
+      invalid.msg = "Word min length must be less than board size.";
+      return invalid;
+    }
+
+    if (wc.maxLength > this.config.size) {
+      invalid.msg = "Word max length should not be more than board size.";
+      return invalid;
+    }
+
+    //validate that dictionary contains enough words
+    if (wc.dictionary.length < wc.amount) {
+      invalid.msg = "Amount of words cannot be greater than available ones.";
+      return invalid;
+    }
+
+    //empty dictionary
+    if (wc.dictionary.length === 0) {
+      invalid.msg = "dictionary is empty";
+      return invalid;
+    }
+
+    //at least one direction
+    if (this.config.allowedDirections.length < 1) {
+      invalid.msg = "At least one direction must be specified";
+      return invalid;
+    }
+
+    /**
+     * TODO: more complex validations here like:
+     * is game doable
+     * etc
+     */
+
+    return {
+      valid: true
+    };
   };
 
   private getRandomWordsFromDictionary = (): string[] => {
