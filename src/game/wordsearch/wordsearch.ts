@@ -96,6 +96,11 @@ export class Wordsearch {
     }
   }
 
+  /**
+   * Sets a config param or all of it
+   * @param {Partial<WordsearchInput>} config
+   * @returns {boolean}
+   */
   public setConfig = (config?: Partial<WordsearchInput>) => {
     if (config) {
       this.config = deepmerge(this.defaultConfig, config, {
@@ -105,6 +110,11 @@ export class Wordsearch {
     return !!config;
   };
 
+  /**
+   * generates a board with the current input
+   * @param {Partial<WordsearchInput>} config
+   * @returns {WordsearchOutput}
+   */
   public generate = (config?: Partial<WordsearchInput>): WordsearchOutput => {
     this.setConfig(config);
     const valid = this.validConfig();
@@ -124,6 +134,46 @@ export class Wordsearch {
     } else {
       throw new Error("Invalid configuration: " + valid.msg);
     }
+  };
+
+  /**
+   * returns a list of random words from the dictionary that meet
+   * the configuration criteria
+   * @returns {string[]}
+   */
+  private getRandomWordsFromDictionary = (): string[] => {
+    const words: string[] = [];
+    const wordCriteria = (word: string, list: string[]): boolean => {
+      const wc = this.config.wordsConfig;
+      return (
+        !!word &&
+        list.indexOf(word) < 0 &&
+        word.length >= wc.minLength &&
+        word.length <= wc.minLength
+      );
+    };
+    while (words.length < this.config.wordsConfig.amount) {
+      const word = this.getRandomWord();
+      if (wordCriteria(word, words)) {
+        words.push(word);
+      }
+    }
+
+    return words;
+  };
+
+  /**
+   * just gets a random word
+   * @returns {string}
+   */
+  private getRandomWord = (): string => {
+    const randInt = parseInt(
+      Math.floor(
+        Math.random() * this.config.wordsConfig.dictionary.length
+      ).toString(),
+      10
+    );
+    return this.config.wordsConfig.dictionary[randInt];
   };
 
   /**
@@ -179,47 +229,13 @@ export class Wordsearch {
 
     /**
      * TODO: more complex validations here like:
-     * is game doable
+     * is game doable?
+     * can we fit all those words?
      * etc
      */
 
     return {
       valid: true
     };
-  };
-
-  private getRandomWordsFromDictionary = (): string[] => {
-    const words: string[] = [];
-
-    while (words.length < this.config.wordsConfig.amount) {
-      //process.stdout.write(".");
-      const word = this.getRandomWord();
-      if (word && words.indexOf(word) < 0) {
-        words.push(word);
-      }
-    }
-
-    return words;
-  };
-
-  private getRandomWord = (): string => {
-    let word = "";
-    let i = 0;
-    while (
-      word.length < this.config.wordsConfig.minLength ||
-      word.length > this.config.wordsConfig.maxLength
-    ) {
-      const randInt = parseInt(
-        Math.floor(
-          Math.random() * this.config.wordsConfig.dictionary.length
-        ).toString(),
-        10
-      );
-      word = this.config.wordsConfig.dictionary[randInt];
-      if (!word) {
-        word = "";
-      }
-    }
-    return word;
   };
 }
