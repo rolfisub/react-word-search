@@ -30,6 +30,10 @@ interface WordsConfig {
    * list of words to pick from
    */
   dictionary: string[];
+  /**
+   * send debug info to the console?
+   */
+  debug: boolean;
 }
 
 export interface WordsearchInput {
@@ -80,7 +84,8 @@ export class Wordsearch {
       amount: 4,
       minLength: 2,
       maxLength: 7,
-      dictionary: [...commonEnglishWords]
+      dictionary: [...commonEnglishWords],
+      debug: true
     },
     allowedDirections: [
       WordsearchDirections.DOWN,
