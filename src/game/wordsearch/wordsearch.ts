@@ -82,9 +82,9 @@ export class Wordsearch {
   protected defaultConfig: WordsearchInput = {
     size: 8,
     wordsConfig: {
-      amount: 60,
+      amount: 200,
       minLength: 2,
-      maxLength: 12,
+      maxLength: 6,
       strict: false,
       dictionary: [...commonEnglishWords],
       random: true
@@ -121,6 +121,7 @@ export class Wordsearch {
           board: [],
           words
         };
+        console.log(words);
         this.output = o;
         return this.output;
       } catch (e) {
@@ -143,8 +144,9 @@ export class Wordsearch {
     const words: string[] = [];
 
     while (words.length < this.config.wordsConfig.amount) {
+      //process.stdout.write(".");
       const word = this.getRandomWord();
-      if (words.indexOf(word) < 0) {
+      if (word && words.indexOf(word) < 0) {
         words.push(word);
       }
     }
@@ -154,15 +156,21 @@ export class Wordsearch {
 
   private getRandomWord = (): string => {
     let word = "";
-
+    let i = 0;
     while (
       word.length < this.config.wordsConfig.minLength ||
       word.length > this.config.wordsConfig.maxLength
     ) {
-      const randInt = Math.floor(
-        Math.random() * this.config.wordsConfig.dictionary.length - 1
+      const randInt = parseInt(
+        Math.floor(
+          Math.random() * this.config.wordsConfig.dictionary.length
+        ).toString(),
+        10
       );
       word = this.config.wordsConfig.dictionary[randInt];
+      if (!word) {
+        word = "";
+      }
     }
     return word;
   };
