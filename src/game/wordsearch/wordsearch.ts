@@ -77,9 +77,9 @@ export class Wordsearch {
   protected defaultConfig: WordsearchInput = {
     size: 8,
     wordsConfig: {
-      amount: 40,
+      amount: 4,
       minLength: 2,
-      maxLength: 6,
+      maxLength: 7,
       dictionary: [...commonEnglishWords]
     },
     allowedDirections: [
@@ -143,18 +143,24 @@ export class Wordsearch {
    */
   private getRandomWordsFromDictionary = (): string[] => {
     const words: string[] = [];
-    const wordCriteria = (word: string, list: string[]): boolean => {
+    const wordCriteria = (word, list: string[]): boolean => {
       const wc = this.config.wordsConfig;
       return (
-        !!word &&
+        //is a string
+        typeof word === "string" &&
+        //has something in it
+        word.length > 0 &&
+        //is aword that we dont have yet
         list.indexOf(word) < 0 &&
+        //is the correct size
         word.length >= wc.minLength &&
-        word.length <= wc.minLength
+        word.length <= wc.maxLength
       );
     };
     while (words.length < this.config.wordsConfig.amount) {
       const word = this.getRandomWord();
-      if (wordCriteria(word, words)) {
+      const shouldWe = wordCriteria(word, words);
+      if (shouldWe) {
         words.push(word);
       }
     }
