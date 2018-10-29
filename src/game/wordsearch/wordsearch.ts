@@ -2,7 +2,7 @@ import * as deepmerge from "deepmerge";
 
 const wordlist = require("wordlist-english");
 
-enum WordsearchDirections {
+enum WSDirections {
   UP,
   DOWN,
   LEFT,
@@ -39,7 +39,7 @@ interface WordsConfig {
 export interface WordsearchInput {
   size: number;
   wordsConfig: WordsConfig;
-  allowedDirections: WordsearchDirections[];
+  allowedDirections: WSDirections[];
   allowWordOverlap: boolean;
 }
 
@@ -63,6 +63,59 @@ export interface ValidationMsg {
   valid: boolean;
   msg: string;
 }
+
+/*
+  UP,
+  DOWN,
+  LEFT,
+  RIGHT,
+  UP_RIGHT,
+  UP_LEFT,
+  DOWN_RIGHT,
+  DOWN_LEFT
+ */
+const directions2D: Vector2D[] = [
+  //up
+  {
+    x: 0,
+    y: -1
+  },
+  //down
+  {
+    x: 0,
+    y: 1
+  },
+  //left
+  {
+    x: -1,
+    y: 0
+  },
+  //right
+  {
+    x: 1,
+    y: 0
+  },
+  //up right
+  {
+    x: 1,
+    y: -1
+  },
+  //up left
+  {
+    x: -1,
+    y: -1
+  },
+  //down right
+  {
+    x: 1,
+    y: 1
+  },
+  //down left
+  {
+    x: -1,
+    y: 1
+  }
+];
 
 const commonEnglishWords = [
   ...wordlist["english/american/10"],
@@ -89,9 +142,9 @@ export class Wordsearch {
       debug: true
     },
     allowedDirections: [
-      WordsearchDirections.DOWN,
-      WordsearchDirections.RIGHT,
-      WordsearchDirections.DOWN_RIGHT
+      WSDirections.DOWN,
+      WSDirections.RIGHT,
+      WSDirections.DOWN_RIGHT
     ],
     allowWordOverlap: true
   };
@@ -149,10 +202,41 @@ export class Wordsearch {
 
     cells = this.getBlankBoard();
 
-
     return cells;
   };
 
+  private fitWordInRandomPos = (word: string): Cell[][] | null => {
+    const fitted = false;
+    const maxTries = 1000;
+    let tryCount = 0;
+
+    while (!fitted && tryCount < maxTries) {
+      const randX = this.getRandomInteger(1, this.config.size);
+      const randY = this.getRandomInteger(1, this.config.size);
+      const randomDirection = this.getRandomAllowedDirection();
+
+      tryCount++;
+    }
+
+    return null;
+  };
+
+  private getRandomAllowedDirection = (): Vector2D => {
+    return directions2D[
+      this.config.allowedDirections[
+        this.getRandomInteger(0, this.config.allowedDirections.length - 1)
+      ]
+    ];
+  };
+
+  private getRandomInteger = (min: number, max: number): number => {
+    return Math.floor(Math.random() * (max - min) + min);
+  };
+
+  /**
+   * resets the board
+   * @returns {Cell[][]}
+   */
   private getBlankBoard = (): Cell[][] => {
     const cells: Cell[][] = [];
     //blank cell
