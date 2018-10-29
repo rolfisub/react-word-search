@@ -40,6 +40,7 @@ export interface WordsearchInput {
   size: number;
   wordsConfig: WordsConfig;
   allowedDirections: WordsearchDirections[];
+  allowWordOverlap: boolean;
 }
 
 interface Vector2D {
@@ -91,7 +92,8 @@ export class Wordsearch {
       WordsearchDirections.DOWN,
       WordsearchDirections.RIGHT,
       WordsearchDirections.DOWN_RIGHT
-    ]
+    ],
+    allowWordOverlap: true
   };
   protected output: WordsearchOutput;
 
@@ -126,6 +128,7 @@ export class Wordsearch {
     if (valid.valid) {
       try {
         const words = this.getRandomWordsFromDictionary();
+        const board = this.allocateWordsInBoard(words);
         const o = {
           board: [],
           words
@@ -139,6 +142,37 @@ export class Wordsearch {
     } else {
       throw new Error("Invalid configuration: " + valid.msg);
     }
+  };
+
+  private allocateWordsInBoard = (words: string[]): Cell[][] => {
+    const cells: Cell[][] = [];
+    //blank cell
+    const blankCell: Cell = {
+      pos: {
+        x: 0,
+        y: 0
+      },
+      letter: "",
+      discovered: false
+    };
+
+    //construct board blank
+    const { size } = this.config;
+
+    //initialize blank
+    for (let x = 0; x < size; x++) {
+      cells.push([]);
+      for (let y = 0; y < size; y++) {
+        const cell = { ...blankCell };
+        cell.pos.x = x;
+        cell.pos.y = y;
+        cells[x].push(cell);
+      }
+    }
+
+
+
+    return cells;
   };
 
   /**
