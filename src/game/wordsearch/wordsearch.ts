@@ -145,6 +145,15 @@ export class Wordsearch {
   };
 
   private allocateWordsInBoard = (words: string[]): Cell[][] => {
+    let cells: Cell[][] = [];
+
+    cells = this.getBlankBoard();
+
+
+    return cells;
+  };
+
+  private getBlankBoard = (): Cell[][] => {
     const cells: Cell[][] = [];
     //blank cell
     const blankCell: Cell = {
@@ -169,9 +178,6 @@ export class Wordsearch {
         cells[x].push(cell);
       }
     }
-
-
-
     return cells;
   };
 
