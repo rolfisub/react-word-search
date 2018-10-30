@@ -153,13 +153,15 @@ export class Wordsearch {
     if (valid.valid) {
       try {
         const words = this.getRandomWordsFromDictionary();
-        const board = this.allocateWordsInBoard(words);
-        const o = {
-          board,
-          words
+        const blankBoard = this.getBlankBoard();
+        this.output = {
+          words,
+          board: blankBoard
         };
-        console.log(o);
-        this.output = o;
+
+        //run all modifications needed
+        this.output.board = this.allocateWordsInBoard(words);
+
         return this.output;
       } catch (e) {
         throw new Error("Failed to create game: " + e.toString());
@@ -205,6 +207,33 @@ export class Wordsearch {
     return null;
   };
 
+  private doesWordCollide = (
+    word: string,
+    startPos: Vector2D,
+    direction: WSDirections
+  ): boolean => {
+    for (let c = 0; c < word.length; c++) {
+
+    }
+    return false;
+  };
+
+  /**
+   * if allow overlap is true, it will return false if char is the same,
+   * else it will return true for any character that is not empty
+   * @param {string} char
+   * @param {Vector2D} pos
+   */
+  private isCharCollision = (char: string, pos: Vector2D): boolean => {
+    const boardChar = this.output.board[pos.x][pos.y].letter;
+    if (this.config.allowWordOverlap) {
+      if (boardChar === char) {
+        return false;
+      }
+    }
+    return !!boardChar;
+  };
+
   /**
    * tells if a given word fits on the specified stat pos
    * and direction
@@ -218,7 +247,17 @@ export class Wordsearch {
     startPos: Vector2D,
     direction: WSDirections
   ): boolean => {
-
+    if (!this.isVectorInBoard(startPos)) {
+      return false;
+    }
+    let tempV: Vector2D | null = { ...startPos };
+    for (let c = 0; c < word.length; c++) {
+      if (tempV) {
+        tempV = this.moveInDirection(tempV, direction);
+      } else {
+        return false;
+      }
+    }
     return true;
   };
 
