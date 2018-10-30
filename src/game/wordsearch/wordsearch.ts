@@ -66,6 +66,7 @@ export interface ValidationMsg {
 }
 
 export interface WordDrawInstruction {
+  word: string;
   startPos: Vector2D;
   direction: WSDirections;
 }
@@ -173,8 +174,35 @@ export class Wordsearch {
 
   private allocateWordsInBoard = (words: string[]): Cell[][] => {
     let cells: Cell[][] = [];
+    cells = [[]];
+    let w = 0;
+    const l = words.length;
 
-    cells = this.getBlankBoard();
+    while (w < l) {
+      w++;
+    }
+
+    return cells;
+  };
+
+  /**
+   * draws a word in a board
+   * @param {WordDrawInstruction} wd
+   * @returns {Cell[][]}
+   */
+  private drawWordInBoard = (wd: WordDrawInstruction): Cell[][] => {
+    const cells = this.output.board;
+    const startPos: Vector2D = wd.startPos;
+    //draw the first letter
+    cells[startPos.x][startPos.y].letter = wd.word[0];
+
+    let newPos: Vector2D | null = startPos;
+    for (let c = 1; c < wd.word.length; c++) {
+      newPos = this.moveInDirection(newPos as Vector2D, wd.direction);
+      if (newPos) {
+        cells[newPos.x][newPos.y].letter = wd.word[c];
+      }
+    }
 
     return cells;
   };
@@ -212,9 +240,7 @@ export class Wordsearch {
     startPos: Vector2D,
     direction: WSDirections
   ): boolean => {
-    for (let c = 0; c < word.length; c++) {
-
-    }
+    for (let c = 0; c < word.length; c++) {}
     return false;
   };
 
