@@ -1,4 +1,5 @@
 import * as deepmerge from "deepmerge";
+import * as _ from "lodash";
 
 const wordlist = require("wordlist-english");
 
@@ -64,58 +65,10 @@ export interface ValidationMsg {
   msg: string;
 }
 
-/*
-  UP,
-  DOWN,
-  LEFT,
-  RIGHT,
-  UP_RIGHT,
-  UP_LEFT,
-  DOWN_RIGHT,
-  DOWN_LEFT
- */
-const directions2D: Vector2D[] = [
-  //up
-  {
-    x: 0,
-    y: -1
-  },
-  //down
-  {
-    x: 0,
-    y: 1
-  },
-  //left
-  {
-    x: -1,
-    y: 0
-  },
-  //right
-  {
-    x: 1,
-    y: 0
-  },
-  //up right
-  {
-    x: 1,
-    y: -1
-  },
-  //up left
-  {
-    x: -1,
-    y: -1
-  },
-  //down right
-  {
-    x: 1,
-    y: 1
-  },
-  //down left
-  {
-    x: -1,
-    y: 1
-  }
-];
+export interface WordDrawInstruction {
+  startPos: Vector2D;
+  direction: WSDirections;
+}
 
 const commonEnglishWords = [
   ...wordlist["english/american/10"],
@@ -150,6 +103,25 @@ export class Wordsearch {
   };
   protected output: WordsearchOutput;
 
+  private directions2D: Vector2D[] = [
+    //up
+    { x: 0, y: -1 },
+    //down
+    { x: 0, y: 1 },
+    //left
+    { x: -1, y: 0 },
+    //right
+    { x: 1, y: 0 },
+    //up right
+    { x: 1, y: -1 },
+    //up left
+    { x: -1, y: -1 },
+    //down right
+    { x: 1, y: 1 },
+    //down left
+    { x: -1, y: 1 }
+  ];
+
   constructor(config?: Partial<WordsearchInput>) {
     if (!this.setConfig(config)) {
       this.config = { ...this.defaultConfig };
@@ -183,10 +155,10 @@ export class Wordsearch {
         const words = this.getRandomWordsFromDictionary();
         const board = this.allocateWordsInBoard(words);
         const o = {
-          board: [],
+          board,
           words
         };
-        console.log(words);
+        console.log(o);
         this.output = o;
         return this.output;
       } catch (e) {
@@ -205,30 +177,112 @@ export class Wordsearch {
     return cells;
   };
 
-  private fitWordInRandomPos = (word: string): Cell[][] | null => {
-    const fitted = false;
-    const maxTries = 1000;
-    let tryCount = 0;
+  /**
+   * tries to fit a word in a board
+   * @param {string} word
+   * @param {WSDirections[]} allowedDirections
+   * @returns {WordDrawInstruction | null}
+   */
+  private fitWordInRandomPos = (
+    word: string,
+    allowedDirections?: WSDirections[]
+  ): WordDrawInstruction | null => {
+    const directions: WSDirections[] = allowedDirections
+      ? [..._.shuffle(allowedDirections)]
+      : [..._.shuffle(this.config.allowedDirections)];
 
-    while (!fitted && tryCount < maxTries) {
-      const randX = this.getRandomInteger(1, this.config.size);
-      const randY = this.getRandomInteger(1, this.config.size);
-      const randomDirection = this.getRandomAllowedDirection();
+    //start with a random pos with in the board
+    const startPos: Vector2D = {
+      x: this.getRandomInteger(0, this.config.size - 1),
+      y: this.getRandomInteger(0, this.config.size - 1)
+    };
 
-      tryCount++;
-    }
+    //direction on which to move if cell is no good
+    const checkDirection: Vector2D = this.getDirectionVector(
+      WSDirections.RIGHT
+    );
 
     return null;
   };
 
+  /**
+   * tells if a given word fits on the specified stat pos
+   * and direction
+   * @param {string} word
+   * @param {Vector2D} startPos
+   * @param {WSDirections} direction
+   * @returns {boolean}
+   */
+  private doesWordFit = (
+    word: string,
+    startPos: Vector2D,
+    direction: WSDirections
+  ): boolean => {
+
+    return true;
+  };
+
+  /**
+   * utility to move inside the board
+   * @param {Vector2D} startPos
+   * @param {WSDirections} direction
+   * @returns {Vector2D | null}
+   */
+  private moveInDirection = (
+    startPos: Vector2D,
+    direction: WSDirections
+  ): Vector2D | null => {
+    const directionVector = this.getDirectionVector(direction);
+    const newVector: Vector2D = {
+      x: startPos.x + directionVector.x,
+      y: startPos.y + directionVector.y
+    };
+    if (this.isVectorInBoard(newVector)) {
+      return newVector;
+    }
+    return null;
+  };
+
+  /**
+   * checks if a vector remains inside
+   * @param {Vector2D} vector
+   * @returns {boolean}
+   */
+  private isVectorInBoard = (vector: Vector2D): boolean => {
+    if (vector.x >= 0 && vector.x < this.config.size) {
+      if (vector.y >= 0 && vector.y < this.config.size) {
+        return true;
+      }
+    }
+    return false;
+  };
+
+  /**
+   * gets a random direction vector from allowed directions
+   * @returns {Vector2D}
+   */
   private getRandomAllowedDirection = (): Vector2D => {
-    return directions2D[
+    return this.getDirectionVector(
       this.config.allowedDirections[
         this.getRandomInteger(0, this.config.allowedDirections.length - 1)
       ]
-    ];
+    );
   };
 
+  /**
+   * returns a direction vector
+   * @param {WSDirections} direction
+   * @returns {Vector2D}
+   */
+  private getDirectionVector = (direction: WSDirections): Vector2D => {
+    return this.directions2D[direction];
+  };
+  /**
+   * gets a random integer from a range
+   * @param {number} min
+   * @param {number} max
+   * @returns {number}
+   */
   private getRandomInteger = (min: number, max: number): number => {
     return Math.floor(Math.random() * (max - min) + min);
   };
