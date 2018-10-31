@@ -87,17 +87,19 @@ const takeSrcArray = (dest, src) => {
 export class Wordsearch {
   protected config: WordsearchInput;
   protected defaultConfig: WordsearchInput = {
-    size: 8,
+    size: 16,
     wordsConfig: {
-      amount: 4,
-      minLength: 2,
-      maxLength: 7,
+      amount: 10,
+      minLength: 4,
+      maxLength: 10,
       dictionary: [...commonEnglishWords],
       debug: true
     },
     allowedDirections: [
-      WSDirections.DOWN,
+      /*WSDirections.DOWN,
       WSDirections.RIGHT,
+      WSDirections.DOWN_RIGHT,*/
+      //WSDirections.DOWN,
       WSDirections.DOWN_RIGHT
     ],
     allowWordOverlap: true
@@ -291,7 +293,7 @@ export class Wordsearch {
       if (np) {
         newPos = np;
       } else {
-        //throw new Error("doesWordCollide went out of bounds");
+        return true;
       }
     }
     return collision;
