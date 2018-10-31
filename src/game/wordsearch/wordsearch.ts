@@ -162,7 +162,7 @@ export class Wordsearch {
 
         //run all modifications needed
         this.allocateWordsInBoard(words);
-
+        console.log("words:", words);
         //debug
         this.consolePrintBoard();
 
@@ -181,7 +181,10 @@ export class Wordsearch {
   private consolePrintBoard = () => {
     for (let x = 0; x < this.config.size; x++) {
       for (let y = 0; y < this.config.size; y++) {
-        process.stdout.write("|" + this.output.board[x][y].letter);
+        const lett = this.output.board[x][y].letter
+          ? this.output.board[x][y].letter
+          : " ";
+        process.stdout.write("|" + lett);
       }
       console.log("|");
     }
@@ -195,11 +198,9 @@ export class Wordsearch {
   private allocateWordsInBoard = (words: string[]) => {
     let w = 0;
     const l = words.length;
-    console.log("entering allocateWordsInBoard");
     while (w < l) {
       const wd = this.fitWordInRandomPos(words[w]);
       if (wd) {
-        process.stdout.write(".");
         this.drawWordInBoard(wd);
       }
       w++;
@@ -224,7 +225,6 @@ export class Wordsearch {
     const randomCells = [
       ...(_.shuffle(_.flattenDeep(this.output.board)) as Cell[])
     ];
-
 
     //check each direction and pos
     for (let d = 0; d < directions.length; d++) {
@@ -289,7 +289,7 @@ export class Wordsearch {
       if (np) {
         newPos = np;
       } else {
-        throw new Error("doesWordCollide went out of bounds");
+        //throw new Error("doesWordCollide went out of bounds");
       }
     }
     return collision;
