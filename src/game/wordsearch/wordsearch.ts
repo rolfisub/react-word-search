@@ -97,9 +97,8 @@ export class Wordsearch {
     },
     allowedDirections: [
       WSDirections.DOWN,
-     /* WSDirections.RIGHT,
-      WSDirections.DOWN_RIGHT*/
-
+      WSDirections.RIGHT,
+      WSDirections.DOWN_RIGHT
     ],
     allowWordOverlap: true
   };
@@ -163,6 +162,9 @@ export class Wordsearch {
 
         //run all modifications needed
         this.allocateWordsInBoard(words);
+        //fill in chars
+        this.fillInRandomChars();
+
         console.log("words:", words);
         //debug
         this.consolePrintBoard();
@@ -174,6 +176,29 @@ export class Wordsearch {
     } else {
       throw new Error("Invalid configuration: " + valid.msg);
     }
+  };
+
+  /**
+   * will go trough each cell and place a random letter if empty
+   */
+  private fillInRandomChars = () => {
+    for (let x = 0; x < this.config.size; x++) {
+      for (let y = 0; y < this.config.size; y++) {
+        if (!this.output.board[x][y].letter) {
+          this.output.board[x][y].letter = this.getRandomChar();
+        }
+      }
+    }
+  };
+
+  /**
+   * returns a random char a-z range
+   * @returns {string}
+   */
+  private getRandomChar = (): string => {
+    const abc = "abcdefghijklmnopqrstuvwxyz";
+    const charPos = this.getRandomInteger(0, abc.length - 1);
+    return abc[charPos];
   };
 
   /**
