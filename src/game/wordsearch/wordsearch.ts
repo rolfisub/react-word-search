@@ -161,7 +161,10 @@ export class Wordsearch {
         };
 
         //run all modifications needed
-        this.output.board = this.allocateWordsInBoard(words);
+        this.allocateWordsInBoard(words);
+
+        //debug
+        this.consolePrintBoard();
 
         return this.output;
       } catch (e) {
@@ -172,17 +175,73 @@ export class Wordsearch {
     }
   };
 
-  private allocateWordsInBoard = (words: string[]): Cell[][] => {
-    let cells: Cell[][] = [];
-    cells = [[]];
+  /**
+   * prints an ascii representation of the board to the console
+   */
+  private consolePrintBoard = () => {
+    for (let x = 0; x < this.config.size; x++) {
+      for (let y = 0; y < this.config.size; y++) {
+        process.stdout.write("|" + this.output.board[x][y].letter);
+      }
+      console.log("|");
+    }
+  };
+
+  /**
+   * tries to allocate all the words in a current board
+   * @param {string[]} words
+   * @returns {Cell[][]}
+   */
+  private allocateWordsInBoard = (words: string[]) => {
     let w = 0;
     const l = words.length;
 
     while (w < l) {
+      const wd = this.fitWordInRandomPos(words[w]);
+      if (wd) {
+        process.stdout.write('.');
+        this.drawWordInBoard(wd);
+      }
       w++;
     }
+  };
 
-    return cells;
+  /**
+   * tries to fit a word in a board
+   * @param {string} word
+   * @param {WSDirections[]} allowedDirections
+   * @returns {WordDrawInstruction | null}
+   */
+  private fitWordInRandomPos = (
+    word: string,
+    allowedDirections?: WSDirections[]
+  ): WordDrawInstruction | null => {
+    const directions: WSDirections[] = allowedDirections
+      ? [..._.shuffle(allowedDirections)]
+      : [..._.shuffle(this.config.allowedDirections)];
+
+    //get random ordered cells
+    const randomCells = [
+      ...(_.shuffle(_.flattenDeep(this.output.board)) as Cell[])
+    ];
+
+    //check each direction and pos
+    for (let d = 0; d < directions.length; d++) {
+      const cell = randomCells.pop();
+      if (cell) {
+        if (this.doesWordFit(word, cell.pos, directions[d])) {
+          if (!this.doesWordCollide(word, cell.pos, directions[d])) {
+            return {
+              word,
+              startPos: cell.pos,
+              direction: directions[d]
+            };
+          }
+        }
+      }
+    }
+
+    return null;
   };
 
   /**
@@ -208,40 +267,31 @@ export class Wordsearch {
   };
 
   /**
-   * tries to fit a word in a board
+   * checks if a word collides or not
    * @param {string} word
-   * @param {WSDirections[]} allowedDirections
-   * @returns {WordDrawInstruction | null}
+   * @param {Vector2D} startPos
+   * @param {WSDirections} direction
+   * @returns {boolean}
    */
-  private fitWordInRandomPos = (
-    word: string,
-    allowedDirections?: WSDirections[]
-  ): WordDrawInstruction | null => {
-    const directions: WSDirections[] = allowedDirections
-      ? [..._.shuffle(allowedDirections)]
-      : [..._.shuffle(this.config.allowedDirections)];
-
-    //start with a random pos with in the board
-    const startPos: Vector2D = {
-      x: this.getRandomInteger(0, this.config.size - 1),
-      y: this.getRandomInteger(0, this.config.size - 1)
-    };
-
-    //direction on which to move if cell is no good
-    const checkDirection: Vector2D = this.getDirectionVector(
-      WSDirections.RIGHT
-    );
-
-    return null;
-  };
-
   private doesWordCollide = (
     word: string,
     startPos: Vector2D,
     direction: WSDirections
   ): boolean => {
-    for (let c = 0; c < word.length; c++) {}
-    return false;
+    let collision = false;
+    let newPos: Vector2D = { ...startPos };
+    for (let c = 0; c < word.length; c++) {
+      if (this.isCharCollision(word[c], newPos)) {
+        collision = true;
+      }
+      const np = this.moveInDirection(newPos, direction);
+      if (np) {
+        newPos = np;
+      } else {
+        throw new Error("doesWordCollide went out of bounds");
+      }
+    }
+    return collision;
   };
 
   /**
