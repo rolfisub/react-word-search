@@ -195,11 +195,11 @@ export class Wordsearch {
   private allocateWordsInBoard = (words: string[]) => {
     let w = 0;
     const l = words.length;
-
+    console.log("entering allocateWordsInBoard");
     while (w < l) {
       const wd = this.fitWordInRandomPos(words[w]);
       if (wd) {
-        process.stdout.write('.');
+        process.stdout.write(".");
         this.drawWordInBoard(wd);
       }
       w++;
@@ -224,6 +224,7 @@ export class Wordsearch {
     const randomCells = [
       ...(_.shuffle(_.flattenDeep(this.output.board)) as Cell[])
     ];
+
 
     //check each direction and pos
     for (let d = 0; d < directions.length; d++) {
@@ -408,15 +409,6 @@ export class Wordsearch {
    */
   private getBlankBoard = (): Cell[][] => {
     const cells: Cell[][] = [];
-    //blank cell
-    const blankCell: Cell = {
-      pos: {
-        x: 0,
-        y: 0
-      },
-      letter: "",
-      discovered: false
-    };
 
     //construct board blank
     const { size } = this.config;
@@ -425,10 +417,14 @@ export class Wordsearch {
     for (let x = 0; x < size; x++) {
       cells.push([]);
       for (let y = 0; y < size; y++) {
-        const cell = { ...blankCell };
-        cell.pos.x = x;
-        cell.pos.y = y;
-        cells[x].push(cell);
+        cells[x].push({
+          pos: {
+            x,
+            y
+          },
+          letter: "",
+          discovered: false
+        });
       }
     }
     return cells;
