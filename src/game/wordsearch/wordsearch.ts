@@ -226,17 +226,19 @@ export class Wordsearch {
       ...(_.shuffle(_.flattenDeep(this.output.board)) as Cell[])
     ];
 
-    //check each direction and pos
-    for (let d = 0; d < directions.length; d++) {
+    while (randomCells.length) {
+      //check each direction and pos
       const cell = randomCells.pop();
-      if (cell) {
-        if (this.doesWordFit(word, cell.pos, directions[d])) {
-          if (!this.doesWordCollide(word, cell.pos, directions[d])) {
-            return {
-              word,
-              startPos: cell.pos,
-              direction: directions[d]
-            };
+      for (let d = 0; d < directions.length; d++) {
+        if (cell) {
+          if (this.doesWordFit(word, cell.pos, directions[d])) {
+            if (!this.doesWordCollide(word, cell.pos, directions[d])) {
+              return {
+                word,
+                startPos: cell.pos,
+                direction: directions[d]
+              };
+            }
           }
         }
       }
