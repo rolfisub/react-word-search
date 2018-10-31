@@ -87,20 +87,19 @@ const takeSrcArray = (dest, src) => {
 export class Wordsearch {
   protected config: WordsearchInput;
   protected defaultConfig: WordsearchInput = {
-    size: 16,
+    size: 32,
     wordsConfig: {
-      amount: 10,
+      amount: 50,
       minLength: 4,
       maxLength: 10,
       dictionary: [...commonEnglishWords],
       debug: true
     },
     allowedDirections: [
-      /*WSDirections.DOWN,
-      WSDirections.RIGHT,
-      WSDirections.DOWN_RIGHT,*/
-      //WSDirections.DOWN,
-      WSDirections.DOWN_RIGHT
+      WSDirections.DOWN,
+     /* WSDirections.RIGHT,
+      WSDirections.DOWN_RIGHT*/
+
     ],
     allowWordOverlap: true
   };
@@ -108,21 +107,21 @@ export class Wordsearch {
 
   private directions2D: Vector2D[] = [
     //up
-    { x: 0, y: -1 },
-    //down
-    { x: 0, y: 1 },
-    //left
     { x: -1, y: 0 },
-    //right
+    //down
     { x: 1, y: 0 },
+    //left
+    { x: 0, y: -1 },
+    //right
+    { x: 0, y: 1 },
     //up right
-    { x: 1, y: -1 },
+    { x: -1, y: 1 },
     //up left
     { x: -1, y: -1 },
     //down right
     { x: 1, y: 1 },
     //down left
-    { x: -1, y: 1 }
+    { x: 1, y: -1 }
   ];
 
   constructor(config?: Partial<WordsearchInput>) {
