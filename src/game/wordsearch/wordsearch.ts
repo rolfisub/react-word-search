@@ -87,11 +87,11 @@ const takeSrcArray = (dest, src) => {
 export class Wordsearch {
   protected config: WordsearchInput;
   protected defaultConfig: WordsearchInput = {
-    size: 32,
+    size: 15,
     wordsConfig: {
-      amount: 50,
+      amount: 4,
       minLength: 4,
-      maxLength: 10,
+      maxLength: 8,
       dictionary: [...commonEnglishWords],
       debug: true
     },
@@ -162,12 +162,13 @@ export class Wordsearch {
 
         //run all modifications needed
         this.allocateWordsInBoard(words);
+        this.consolePrintBoard();
         //fill in chars
         this.fillInRandomChars();
-
-        console.log("words:", words);
         //debug
         this.consolePrintBoard();
+
+        console.log("words:", words);
 
         return this.output;
       } catch (e) {
