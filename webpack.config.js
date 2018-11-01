@@ -13,6 +13,9 @@ module.exports = {
     contentBase:'./build',
     hot: true
   },
+  resolve: {
+    extensions: ['.ts', '.tsx', '.js']
+  },
   module: {
     rules: [
       {

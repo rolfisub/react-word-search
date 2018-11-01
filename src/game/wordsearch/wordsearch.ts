@@ -89,8 +89,8 @@ export class Wordsearch {
   protected defaultConfig: WordsearchInput = {
     size: 15,
     wordsConfig: {
-      amount: 4,
-      minLength: 4,
+      amount: 8,
+      minLength: 2,
       maxLength: 8,
       dictionary: [...commonEnglishWords],
       debug: true
