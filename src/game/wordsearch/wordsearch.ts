@@ -49,7 +49,7 @@ interface Vector2D {
   y: number;
 }
 
-interface Cell {
+export interface Cell {
   pos: Vector2D;
   letter: string;
   discovered: boolean;

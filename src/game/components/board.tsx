@@ -1,16 +1,8 @@
 import * as React from "react";
-import { Cell } from "./cell";
+import { WordsearchOutput } from "../wordsearch/wordsearch";
 
-interface IBoardProps {
-  board: string[][];
+export class Board extends React.Component<WordsearchOutput> {
+  render() {
+    return <div>Board should render each cell</div>;
+  }
 }
-
-export const Board = (props: IBoardProps) => (
-  <div>
-    {props.board.map((x, xi) =>
-      x.map((y, yi) => (
-        <Cell key={xi + "." + yi} letter={props.board[xi][yi]} />
-      ))
-    )}
-  </div>
-);

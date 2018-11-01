@@ -10,7 +10,10 @@
     "noImplicitReturns": true,
     "noImplicitThis": true,
     "noImplicitAny": false,
-    "strictNullChecks": true
+    "strictNullChecks": true,
+    "rootDirs": ["./src"],
+    "baseUrl": "./src"
   },
-  "exclude": ["node_modules"]
+  "include": ["./src"],
+  "exclude": ["./node_modules", "./build"]
 }

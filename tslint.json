@@ -7,6 +7,8 @@
       "no-var-requires": false,
       "no-console": false,
       "comment-format": false,
-      "prefer-for-of": false
+      "prefer-for-of": false,
+      "member-access": false,
+      "ordered-imports": false
   }
 }

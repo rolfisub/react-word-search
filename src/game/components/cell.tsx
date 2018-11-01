@@ -1,8 +1,16 @@
 import * as React from "react";
+import { Cell as CellInterface } from "../wordsearch/wordsearch";
+import { CSSProperties } from "react";
 
-interface ICellProps {
-  letter: string;
-  key: string;
+const styles: CSSProperties = {
+  border: "1px solid",
+  width: 10,
+  height: 10,
+  fontSize: 10
+};
+
+export class Cell extends React.Component<CellInterface> {
+  render() {
+    return <div style={styles}>{this.props.letter}</div>;
+  }
 }
-
-export const Cell = (props: ICellProps) => <div>{props.letter}</div>;
