@@ -1,8 +1,6 @@
 import * as deepmerge from "deepmerge";
 import * as _ from "lodash";
 
-const wordlist = require("wordlist-english");
-
 enum WSDirections {
   UP,
   DOWN,
@@ -39,6 +37,13 @@ interface WordsConfig {
 
 export interface WordsearchInput {
   size: number;
+  wordsConfig: Partial<WordsConfig>;
+  allowedDirections: WSDirections[];
+  allowWordOverlap: boolean;
+}
+
+interface WordsearchConfig {
+  size: number;
   wordsConfig: WordsConfig;
   allowedDirections: WSDirections[];
   allowWordOverlap: boolean;
@@ -71,22 +76,17 @@ export interface WordDrawInstruction {
   direction: WSDirections;
 }
 
-const commonEnglishWords = [
-  ...wordlist["english/american/10"],
-  ...wordlist["english/american/20"],
-  ...wordlist["english/american/30"],
-  ...wordlist["english/american/40"],
-  ...wordlist["english/american/50"],
-  ...wordlist["english/american/60"]
-];
+/**
+ * had to get rid of default dictionary until I find isomorphic words package
+ * @type {string[]}
+ */
+const commonEnglishWords: string[] = [];
 
-const takeSrcArray = (dest, src) => {
-  return src;
-};
+const takeSrcArray = (dest, src) => src;
 
 export class Wordsearch {
-  protected config: WordsearchInput;
-  protected defaultConfig: WordsearchInput = {
+  protected config: WordsearchConfig;
+  protected defaultConfig: WordsearchConfig = {
     size: 15,
     wordsConfig: {
       amount: 8,
@@ -136,7 +136,7 @@ export class Wordsearch {
    */
   public setConfig = (config?: Partial<WordsearchInput>) => {
     if (config) {
-      this.config = deepmerge(this.defaultConfig, config, {
+      this.config = deepmerge(this.defaultConfig, config as any, {
         arrayMerge: takeSrcArray
       });
     }
