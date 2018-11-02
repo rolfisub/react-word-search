@@ -1,4 +1,4 @@
-import * as deepmerge from "deepmerge";
+import deepmerge from "deepmerge";
 import * as _ from "lodash";
 
 enum WSDirections {
@@ -162,13 +162,9 @@ export class Wordsearch {
 
         //run all modifications needed
         this.allocateWordsInBoard(words);
-        this.consolePrintBoard();
+
         //fill in chars
         this.fillInRandomChars();
-        //debug
-        this.consolePrintBoard();
-
-        console.log("words:", words);
 
         return this.output;
       } catch (e) {
