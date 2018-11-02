@@ -168,7 +168,7 @@ export class Wordsearch {
 
         return this.output;
       } catch (e) {
-        throw new Error("Failed to create game: " + e.toString());
+        throw new Error("Failed to create webgame: " + e.toString());
       }
     } else {
       throw new Error("Invalid configuration: " + valid.msg);
@@ -502,7 +502,7 @@ export class Wordsearch {
   };
 
   /**
-   * validates a config input before generating a new game
+   * validates a config input before generating a new webgame
    * @returns {Partial<ValidationMsg>}
    */
   private validConfig = (): Partial<ValidationMsg> => {
@@ -554,7 +554,7 @@ export class Wordsearch {
 
     /**
      * TODO: more complex validations here like:
-     * is game doable?
+     * is webgame doable?
      * can we fit all those words?
      * etc
      */

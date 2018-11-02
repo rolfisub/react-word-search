@@ -1,5 +1,5 @@
 import * as React from "react";
-import { Cell as CellInterface } from "../wordsearch/wordsearch";
+import { Cell as CellInterface } from "../../lib/wordsearch/wordsearch";
 import { CSSProperties } from "react";
 
 const styles: CSSProperties = {

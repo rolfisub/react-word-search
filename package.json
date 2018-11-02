@@ -8,7 +8,7 @@
   "scripts": {
     "build": "webpack",
     "dev": "webpack-dev-server --open",
-    "ws": "ts-node --no-cache ./src/game/wordsearch/test.ts",
+    "ws": "ts-node --no-cache ./src/lib/wordsearch/test.ts",
     "server": "nodemon --watch src/server -e ts --exec \"ts-node --no-cache ./src/server/server.ts\""
   },
   "devDependencies": {

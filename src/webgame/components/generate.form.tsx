@@ -1,8 +1,8 @@
 import * as React from "react";
 import { Field, InjectedFormProps, reduxForm } from "redux-form";
-import { Wordsearch, WordsearchInput } from "../wordsearch/wordsearch";
-import { isRequired } from "../../common/ui.field.validators";
-import { renderTextField } from "../../common/render.fields";
+import { Wordsearch, WordsearchInput } from "../../lib/wordsearch/wordsearch";
+import { isRequired } from "../common/ui.field.validators";
+import { renderTextField } from "../common/render.fields";
 
 interface GenerateFormProps {
   ws: Wordsearch;

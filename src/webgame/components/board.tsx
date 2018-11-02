@@ -1,5 +1,5 @@
 import * as React from "react";
-import { WordsearchOutput } from "../wordsearch/wordsearch";
+import { WordsearchOutput } from "../../lib/wordsearch/wordsearch";
 import { Cell } from "./cell";
 
 export class Board extends React.Component<WordsearchOutput> {

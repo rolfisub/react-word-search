@@ -4,7 +4,7 @@ const webpack = require("webpack");
 
 module.exports = {
   mode: "development",
-  entry: "./src/index.tsx",
+  entry: "./src/webgame/index.tsx",
   output: {
     filename: "bundle.js",
     path: path.resolve("./build")
@@ -26,7 +26,7 @@ module.exports = {
   },
   plugins: [
     new HtmlPlugin({
-      template: "./src/public/index.html",
+      template: "./src/webgame/public/index.html",
       filename: "index.html"
     }),
     new webpack.HotModuleReplacementPlugin()
