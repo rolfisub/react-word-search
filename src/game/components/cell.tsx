@@ -3,12 +3,13 @@ import { Cell as CellInterface } from "../wordsearch/wordsearch";
 import { CSSProperties } from "react";
 
 const styles: CSSProperties = {
-  border: "1px solid",
-  width: 10,
-  height: 10,
-  fontSize: 10,
+  border: "1px dotted",
+  width: 20,
+  height: 20,
+  fontSize: 20,
   float: "left",
-  margin: 0
+  margin: 0,
+  textAlign: "center"
 };
 
 export class Cell extends React.Component<CellInterface> {

@@ -10,7 +10,6 @@ import {
   RadioGroup
 } from "@material-ui/core";
 
-import Dropzone from "react-dropzone";
 
 export const renderRadioGroup = ({ input, ...rest }) => {
   return (
@@ -125,7 +124,7 @@ export const renderChipField = ({
   );
 };
 
-export const renderDropzoneInput = field => {
+/*export const renderDropzoneInput = field => {
   const files = field.input.value;
 
   const style = {
@@ -162,3 +161,4 @@ export const renderDropzoneInput = field => {
     </div>
   );
 };
+*/
