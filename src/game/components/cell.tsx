@@ -13,6 +13,6 @@ const styles: CSSProperties = {
 
 export class Cell extends React.Component<CellInterface> {
   render() {
-    return <div style={styles}>{this.props.letter}</div>;
+    return <span style={styles}>{this.props.letter}</span>;
   }
 }

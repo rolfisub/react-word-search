@@ -8,12 +8,12 @@ export class Board extends React.Component<WordsearchOutput> {
       <div>
         {this.props.board.map((arr, x) => {
           return (
-            <div key={x}>
+            <span key={x}>
               {arr.map((cell, y) => {
                 return <Cell {...cell} key={y} />;
               })}
               <br/>
-            </div>
+            </span>
           );
         })}
       </div>

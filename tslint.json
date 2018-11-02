@@ -2,14 +2,15 @@
   "extends": ["tslint:recommended", "tslint-react", "tslint-config-prettier"],
   "defaultSeverity": "error",
   "rules": {
-      "interface-name": false,
-      "object-literal-sort-keys": false,
-      "no-var-requires": false,
-      "no-console": false,
-      "comment-format": false,
-      "prefer-for-of": false,
-      "member-access": false,
-      "ordered-imports": false,
-      "no-string-literal": false
+    "interface-name": false,
+    "object-literal-sort-keys": false,
+    "no-var-requires": false,
+    "no-console": false,
+    "comment-format": false,
+    "prefer-for-of": false,
+    "member-access": false,
+    "ordered-imports": false,
+    "no-string-literal": false,
+    "jsx-no-lambda": false
   }
 }
