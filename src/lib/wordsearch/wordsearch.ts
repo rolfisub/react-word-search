@@ -1,7 +1,7 @@
 import deepmerge from "deepmerge";
 import * as _ from "lodash";
 
-enum WSDirections {
+export enum WSDirections {
   UP,
   DOWN,
   LEFT,

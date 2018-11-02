@@ -1,6 +1,6 @@
 import { applyMiddleware, combineReducers, createStore, compose } from 'redux';
 import thunk from 'redux-thunk';
-import reducers from "./reducers";
+//import reducers from "./reducers";
 import { reducer as formReducer } from 'redux-form';
 //import { routerMiddleware, routerReducer } from 'react-router-redux';
 
@@ -22,7 +22,7 @@ export default (history?) => {
 
   return createStore(
     combineReducers({
-      reducers,
+      //reducers,
       form: formReducer,
       //router: routerReducer
     }),

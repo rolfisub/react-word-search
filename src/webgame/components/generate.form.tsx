@@ -1,6 +1,10 @@
 import * as React from "react";
-import { Field, InjectedFormProps, reduxForm } from "redux-form";
-import { Wordsearch, WordsearchInput } from "../../lib/wordsearch/wordsearch";
+import { Field, FieldArray, InjectedFormProps, reduxForm } from "redux-form";
+import {
+  Wordsearch,
+  WordsearchInput,
+  WSDirections
+} from "../../lib/wordsearch/wordsearch";
 import { isRequired } from "../common/ui.field.validators";
 import { renderTextField } from "../common/render.fields";
 
@@ -47,10 +51,21 @@ class GenerateForm extends React.Component<
             validate={[isRequired]}
             component={renderTextField as any}
           />
-
-
+          <FieldArray
+            name={"allowedDirections"}
+            props={{ options: WSDirections }}
+            component={props => {
+              console.log(props);
+              return null;
+            }}
+          />
         </div>
       </form>
     );
   }
 }
+
+export const GenerateFormReduxForm = reduxForm({
+  form:'GenerateForm',
+  keepDirtyOnReinitialize: true
+})(GenerateForm);

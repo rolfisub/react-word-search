@@ -1,6 +1,7 @@
 import * as React from "react";
 import { WordsearchOutput } from "../../lib/wordsearch/wordsearch";
 import { Cell } from "./cell";
+import { GenerateFormReduxForm } from "./generate.form";
 
 export class Board extends React.Component<WordsearchOutput> {
   render() {
@@ -19,6 +20,7 @@ export class Board extends React.Component<WordsearchOutput> {
           })}
         </div>
         <p>{this.props.words.toString()}</p>
+        <GenerateFormReduxForm />
       </div>
     );
   }
