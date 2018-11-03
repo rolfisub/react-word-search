@@ -8,12 +8,12 @@ import {
 import { isRequired } from "../common/ui.field.validators";
 import { renderTextField } from "../common/render.fields";
 
-interface GenerateFormProps {
+interface SettingsFormProps {
   ws: Wordsearch;
 }
 
-class GenerateForm extends React.Component<
-  GenerateFormProps & InjectedFormProps<WordsearchInput>
+class SettingsForm extends React.Component<
+  SettingsFormProps & InjectedFormProps<WordsearchInput>
 > {
   submit = values => {
     console.log(values);
@@ -32,7 +32,7 @@ class GenerateForm extends React.Component<
           />
           <Field
             name={"wordsConfig.amount"}
-            label={"Amount of words to generate"}
+            label={"Amount of words to Settings"}
             required={true}
             validate={[isRequired]}
             component={renderTextField as any}
@@ -65,7 +65,7 @@ class GenerateForm extends React.Component<
   }
 }
 
-export const GenerateFormReduxForm = reduxForm({
-  form:'GenerateForm',
+export const SettingsFormReduxForm = reduxForm({
+  form:'SettingsForm',
   keepDirtyOnReinitialize: true
-})(GenerateForm);
+})(SettingsForm);

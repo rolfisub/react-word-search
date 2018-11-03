@@ -3,8 +3,8 @@ import * as fetch from "isomorphic-fetch";
 import { config } from "../config";
 import { Wordsearch, WordsearchOutput } from "../lib/wordsearch/wordsearch";
 import { Board } from "./components/board";
-import { Grid } from "@material-ui/core";
-import { GenerateFormReduxForm } from "./components/generate.form";
+import { Button, Grid } from "@material-ui/core";
+import { SettingsFormReduxForm } from "./components/settings.form";
 
 interface GameState {
   gameBoard: WordsearchOutput;
@@ -24,9 +24,7 @@ export class Game extends React.Component<any, GameState> {
   }
 
   componentDidMount() {
-    this.loadDictionary().then(() => {
-      this.newGame();
-    });
+    this.loadDictionary();
   }
 
   newGame = () => {
@@ -52,11 +50,21 @@ export class Game extends React.Component<any, GameState> {
   render() {
     return (
       <Grid container>
+        <Grid item xs={12}>
+          <Button
+            color={"primary"}
+            size={"small"}
+            variant={"contained"}
+            onClick={this.newGame}
+          >
+            New Game
+          </Button>
+        </Grid>
         <Grid item xs={12} sm={12} md={6}>
           <Board {...this.state.gameBoard} />
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
-          <GenerateFormReduxForm />
+          <SettingsFormReduxForm />
         </Grid>
       </Grid>
     );
