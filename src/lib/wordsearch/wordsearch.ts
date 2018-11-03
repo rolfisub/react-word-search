@@ -12,7 +12,7 @@ export enum WSDirections {
   DOWN_LEFT
 }
 
-interface WordsConfig {
+export interface WordsConfig {
   /**
    * amount of words to generate
    */
@@ -42,14 +42,14 @@ export interface WordsearchInput {
   allowWordOverlap: boolean;
 }
 
-interface WordsearchConfig {
+export interface WordsearchConfig {
   size: number;
   wordsConfig: WordsConfig;
   allowedDirections: WSDirections[];
   allowWordOverlap: boolean;
 }
 
-interface Vector2D {
+export interface Vector2D {
   x: number;
   y: number;
 }
