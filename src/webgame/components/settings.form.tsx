@@ -64,8 +64,12 @@ class SettingsForm extends React.Component<
     );
   }
 }
+/*
+const mapStateToProps = (state, props) => {
 
-export const SettingsFormReduxForm = reduxForm({
+};*/
+
+export const SettingsReduxForm = reduxForm({
   form:'SettingsForm',
-  keepDirtyOnReinitialize: true
+  enableReinitialize: true
 })(SettingsForm);

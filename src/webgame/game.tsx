@@ -4,7 +4,7 @@ import { config } from "../config";
 import { Wordsearch, WordsearchOutput } from "../lib/wordsearch/wordsearch";
 import { Board } from "./components/board";
 import { Button, Grid } from "@material-ui/core";
-import { SettingsFormReduxForm } from "./components/settings.form";
+import { SettingsReduxForm } from "./components/settings.form";
 
 interface GameState {
   gameBoard: WordsearchOutput;
@@ -64,7 +64,7 @@ export class Game extends React.Component<any, GameState> {
           <Board {...this.state.gameBoard} />
         </Grid>
         <Grid item xs={12} sm={12} md={6}>
-          <SettingsFormReduxForm />
+          <SettingsReduxForm />
         </Grid>
       </Grid>
     );
