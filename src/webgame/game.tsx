@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as fetch from "isomorphic-fetch";
-import { config } from "../config";
+import { config } from "./config";
 import { Wordsearch, WordsearchOutput } from "../lib/wordsearch/wordsearch";
 import { Board } from "./components/board";
 import { Button, Grid } from "@material-ui/core";

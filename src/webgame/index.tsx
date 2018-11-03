@@ -2,7 +2,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import { Provider } from "react-redux";
 import { Game } from "./game";
-import createStore from "./redux/store";
+import createStore from "./redux/store/store";
 
 const store = createStore();
 
