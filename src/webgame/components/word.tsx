@@ -14,7 +14,7 @@ class WordClass extends React.Component<WordProps> {
   };
   render() {
     return (
-      <div>
+      <div style={{float:"left", margin: 2, border:"1px dotted"}}>
         <p>{this.props.word}</p>
         <Button
           variant={"contained"}
