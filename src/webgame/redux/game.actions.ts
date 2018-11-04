@@ -68,5 +68,30 @@ export const gameActionCreators = {
 
       return ws.getConfig();
     };
+  },
+  showWord(
+    word: string
+  ): ThunkAction<Promise<boolean>, GameStoreState, void, any> {
+    return async (dispatch, getState): Promise<boolean> => {
+      const exists = ws.showWord(word);
+      const state = getState() as any;
+      const wsOutput = ws.getOutput();
+      const wsConfig = state.reducers.GameReducer.current.config;
+
+      const payload: Payload<Game> = {
+        data: {
+          id: "",
+          game: wsOutput,
+          config: wsConfig
+        }
+      };
+      const action: Action<Game> = {
+        type: GameActionTypes.show,
+        payload
+      };
+
+      dispatch(action);
+      return exists;
+    };
   }
 };

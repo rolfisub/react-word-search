@@ -2,6 +2,7 @@ import * as React from "react";
 import { WordsearchOutput } from "../../lib/wordsearch/wordsearch";
 import { Cell } from "./cell";
 import { Grid } from "@material-ui/core";
+import { Word } from "./word";
 
 export class Board extends React.Component<WordsearchOutput> {
   render() {
@@ -28,7 +29,7 @@ export class Board extends React.Component<WordsearchOutput> {
             }}
           >
             {this.props.words.map((w, i) => {
-              return <p key={i}>{w.word}</p>;
+              return <Word word={w.word} key={i} />;
             })}
           </div>
         </Grid>

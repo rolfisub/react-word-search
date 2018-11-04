@@ -17,6 +17,10 @@ const stylesHover: CSSProperties = {
   backgroundColor: "lightgreen"
 };
 
+const styleDiscovered: CSSProperties = {
+  backgroundColor: "lightblue"
+};
+
 interface CellState {
   isHover: boolean;
 }
@@ -46,7 +50,10 @@ export class Cell extends React.Component<CellInterface, CellState> {
       <span
         onMouseEnter={this.mouseEnter}
         onMouseLeave={this.mouseLeave}
-        style={this.state.isHover ? stylesHover : styles}
+        style={{
+          ...(this.state.isHover ? stylesHover : styles),
+          ...(this.props.discovered ? styleDiscovered : {})
+        }}
       >
         {this.props.letter}
       </span>
