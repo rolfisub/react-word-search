@@ -1,16 +1,23 @@
 import * as React from "react";
 import { WordsearchOutput } from "../../lib/wordsearch/wordsearch";
 import { Cell } from "./cell";
-import { Grid } from "@material-ui/core";
+import { Button, Grid } from "@material-ui/core";
 import { Word } from "./word";
+import { connect } from "react-redux";
+import { gameActionCreators } from "../redux/game.actions";
 
-export class Board extends React.Component<WordsearchOutput> {
+interface BoardProps {
+  resetSelection: () => void;
+  game: WordsearchOutput;
+}
+
+class BoardClass extends React.Component<BoardProps> {
   render() {
     return (
       <Grid container>
         <Grid item xs={12}>
-          <div style={{ width: this.props.board.length * 22, float: "left" }}>
-            {this.props.board.map((arr, x) => {
+          <div style={{ width: this.props.game.board.length * 22, float: "left" }}>
+            {this.props.game.board.map((arr, x) => {
               return (
                 <span key={x}>
                   {arr.map((cell, y) => {
@@ -21,14 +28,21 @@ export class Board extends React.Component<WordsearchOutput> {
               );
             })}
           </div>
+          <Button
+            variant={"contained"}
+            size={"small"}
+            onClick={this.props.resetSelection}
+          >
+            Reset Selection
+          </Button>
           <div
             style={{
-              height: this.props.board.length * 22,
+              height: this.props.game.board.length * 22,
               float: "left",
               margin: 10
             }}
           >
-            {this.props.words.map((w, i) => {
+            {this.props.game.words.map((w, i) => {
               return <Word word={w.word} key={i} />;
             })}
           </div>
@@ -37,3 +51,23 @@ export class Board extends React.Component<WordsearchOutput> {
     );
   }
 }
+
+const mapStateToProps = (state, props) => {
+  return {
+    ...props,
+    game: state.reducers.GameReducer.current.game
+  }
+};
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    ...props,
+    resetSelection: () => {
+      dispatch(gameActionCreators.resetSelection());
+    }
+  };
+};
+
+export const Board = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(BoardClass);

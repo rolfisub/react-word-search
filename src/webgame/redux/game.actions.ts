@@ -37,12 +37,13 @@ export const gameActionCreators = {
       };
 
       const action: Action<Game> = {
-        type: GameActionTypes.create,
+        type: GameActionTypes.show,
         payload
       };
       dispatch(action);
     };
   },
+
   create(): ThunkAction<void, GameStoreState, void, any> {
     return async (dispatch): Promise<void> => {
       const wsOutput = ws.generate();
@@ -63,6 +64,7 @@ export const gameActionCreators = {
       dispatch(action);
     };
   },
+
   setConfig(
     config: Partial<WordsearchInput>
   ): ThunkAction<Promise<WordsearchConfig>, GameStoreState, void, any> {
@@ -87,6 +89,7 @@ export const gameActionCreators = {
       return ws.getConfig();
     };
   },
+
   showWord(
     word: string
   ): ThunkAction<Promise<boolean>, GameStoreState, void, any> {
@@ -122,6 +125,13 @@ export const gameActionCreators = {
         dispatch(gameActionCreators.show());
       }
       return selected;
+    };
+  },
+
+  resetSelection(): ThunkAction<void, GameStoreState, void, any> {
+    return async dispatch => {
+      ws.resetCurrentSelection();
+      dispatch(gameActionCreators.show());
     };
   }
 };
