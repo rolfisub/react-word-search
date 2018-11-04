@@ -1,6 +1,11 @@
 import * as React from "react";
-import { Cell as CellInterface } from "../../lib/wordsearch/wordsearch";
+import {
+  Cell as CellInterface,
+  Vector2D
+} from "../../lib/wordsearch/wordsearch";
 import { CSSProperties } from "react";
+import { connect } from "react-redux";
+import { gameActionCreators } from "../redux/game.actions";
 
 const styles: CSSProperties = {
   border: "1px dotted",
@@ -26,24 +31,28 @@ const styleClicked: CSSProperties = {
   color: "white"
 };
 
-interface CellState {
-  isHover: boolean;
-  clicked: boolean;
+interface CellProps extends CellInterface {
+  submitCell: (pos: Vector2D) => void;
 }
 
-export class Cell extends React.Component<CellInterface, CellState> {
+interface CellState {
+  isHover: boolean;
+}
+
+class CellClass extends React.Component<CellProps, CellState> {
   constructor(props) {
     super(props);
     this.state = {
-      isHover: false,
-      clicked: false
+      isHover: false
     };
   }
 
   mouseEnter = () => {
-    this.setState({
-      isHover: true
-    });
+    if (this.props.selectable) {
+      this.setState({
+        isHover: true
+      });
+    }
   };
 
   mouseLeave = () => {
@@ -53,9 +62,7 @@ export class Cell extends React.Component<CellInterface, CellState> {
   };
 
   onClick = () => {
-    this.setState({
-      clicked: true
-    });
+    this.props.submitCell(this.props.pos);
   };
 
   render() {
@@ -66,11 +73,8 @@ export class Cell extends React.Component<CellInterface, CellState> {
         onClick={this.onClick}
         style={{
           ...(this.state.isHover ? stylesHover : styles),
-          ...(this.props.discovered
-            ? styleDiscovered
-            : this.state.clicked
-              ? styleClicked
-              : {})
+          ...(this.props.discovered ? styleDiscovered : {}),
+          ...(this.props.selected ? styleClicked: {})
         }}
       >
         {this.props.letter}
@@ -78,3 +82,18 @@ export class Cell extends React.Component<CellInterface, CellState> {
     );
   }
 }
+
+const mapStateToProps = (state, props) => props;
+const mapDispatchToProps = (dispatch, props) => {
+  return {
+    ...props,
+    submitCell: (pos: Vector2D) => {
+      dispatch(gameActionCreators.submitCell(pos));
+    }
+  };
+};
+
+export const Cell = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(CellClass);

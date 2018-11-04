@@ -105,7 +105,7 @@ export class Wordsearch {
     },
     allowedDirections: [
       WSDirections.DOWN,
-      WSDirections.RIGHT,
+     // WSDirections.RIGHT,
       WSDirections.DOWN_RIGHT
     ],
     allowWordOverlap: true
@@ -261,6 +261,7 @@ export class Wordsearch {
      */
     if (this.selectedCount === 1) {
       console.log("make selectable adjacent cells that have allowd direction");
+
     }
 
     /**

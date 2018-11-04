@@ -2,6 +2,7 @@ import { ThunkAction } from "redux-thunk";
 import { GameActionTypes, GameStoreState, Game } from "../game.types";
 import { Action, Payload } from "../../common/redux";
 import {
+  Vector2D,
   Wordsearch,
   WordsearchConfig,
   WordsearchInput
@@ -15,16 +16,33 @@ export const gameActionCreators = {
       console.log("index");
     };
   },
-  show(): ThunkAction<void, GameStoreState, void, any> {
-    return async (dispatch): Promise<void> => {
-      console.log("show");
-    };
-  },
+  
   edit(): ThunkAction<void, GameStoreState, void, any> {
     return async (dispatch): Promise<void> => {
       console.log("edit");
     };
   },*/
+
+  show(): ThunkAction<void, GameStoreState, void, any> {
+    return async (dispatch): Promise<void> => {
+      const wsOutput = ws.getOutput();
+      const wsConfig = ws.getConfig();
+
+      const payload: Payload<Game> = {
+        data: {
+          id: "",
+          game: wsOutput,
+          config: wsConfig
+        }
+      };
+
+      const action: Action<Game> = {
+        type: GameActionTypes.create,
+        payload
+      };
+      dispatch(action);
+    };
+  },
   create(): ThunkAction<void, GameStoreState, void, any> {
     return async (dispatch): Promise<void> => {
       const wsOutput = ws.generate();
@@ -92,6 +110,18 @@ export const gameActionCreators = {
 
       dispatch(action);
       return exists;
+    };
+  },
+
+  submitCell(
+    pos: Vector2D
+  ): ThunkAction<Promise<boolean>, GameStoreState, void, any> {
+    return async dispatch => {
+      const selected = ws.selectCell(pos);
+      if (selected) {
+        dispatch(gameActionCreators.show());
+      }
+      return selected;
     };
   }
 };
