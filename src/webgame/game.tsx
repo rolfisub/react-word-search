@@ -1,45 +1,33 @@
 import * as React from "react";
 import * as fetch from "isomorphic-fetch";
 import { config } from "./config";
-import { Wordsearch, WordsearchOutput } from "../lib/wordsearch/wordsearch";
+import { WordsearchInput } from "../lib/wordsearch/wordsearch";
 import { Board } from "./components/board";
 import { Button, Grid } from "@material-ui/core";
 import { SettingsReduxForm } from "./components/settings.form";
+import { connect } from "react-redux";
+import { gameActionCreators } from "./redux/game.actions";
+import { GameStoreState } from "./game.types";
 
-interface GameState {
-  gameBoard: WordsearchOutput;
+interface GameProps {
+  gameState: GameStoreState;
+  newGame: () => void;
+  setConfig: (wsConfig: Partial<WordsearchInput>) => void;
 }
-export class Game extends React.Component<any, GameState> {
-  protected ws: Wordsearch;
 
-  constructor(props) {
-    super(props);
-    this.ws = new Wordsearch();
-    this.state = {
-      gameBoard: {
-        board: [],
-        words: []
-      }
-    };
-  }
-
+class GameClass extends React.Component<GameProps> {
   componentDidMount() {
     this.loadDictionary();
   }
-
-  newGame = () => {
-    this.setState({
-      gameBoard: this.ws.generate()
-    });
-  };
 
   loadDictionary = async () => {
     try {
       const response = await fetch(config.api + "ws/dictionary");
       const words = await response.json();
-      this.ws.setConfig({
+      this.props.setConfig({
         wordsConfig: {
-          dictionary: [...words]
+          amount: 20,
+          dictionary: words
         }
       });
     } catch (e) {
@@ -48,25 +36,53 @@ export class Game extends React.Component<any, GameState> {
   };
 
   render() {
-    return (
-      <Grid container>
-        <Grid item xs={12}>
-          <Button
-            color={"primary"}
-            size={"small"}
-            variant={"contained"}
-            onClick={this.newGame}
-          >
-            New Game
-          </Button>
+    if (this.props.newGame && this.props.gameState) {
+      const { newGame, gameState } = this.props;
+      return (
+        <Grid container>
+          <Grid item xs={12}>
+            <Button
+              color={"primary"}
+              size={"small"}
+              variant={"contained"}
+              onClick={newGame}
+            >
+              New Game
+            </Button>
+          </Grid>
+          <Grid item xs={12} sm={12} md={6}>
+            <Board {...gameState.current.game} />
+          </Grid>
+          <Grid item xs={12} sm={12} md={6}>
+            <SettingsReduxForm />
+          </Grid>
         </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <Board {...this.state.gameBoard} />
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <SettingsReduxForm />
-        </Grid>
-      </Grid>
-    );
+      );
+    } else {
+      return <p>Loading...</p>;
+    }
   }
 }
+
+const mapStateToProps = (state, props) => {
+  return {
+    ...props,
+    gameState: state.reducers.GameReducer
+  };
+};
+
+const mapDispatchToProps = dispatch => {
+  return {
+    setConfig: async (wsConfig: Partial<WordsearchInput>) => {
+      dispatch(gameActionCreators.setConfig(wsConfig));
+    },
+    newGame: async () => {
+      dispatch(gameActionCreators.create());
+    }
+  };
+};
+
+export const Game = connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(GameClass);

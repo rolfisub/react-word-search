@@ -130,6 +130,12 @@ export class Wordsearch {
   }
 
   /**
+   * get current output
+   * @returns {WordsearchOutput}
+   */
+  public getOutput = (): WordsearchOutput => this.output;
+
+  /**
    * Sets a config param or all of it
    * @param {Partial<WordsearchInput>} config
    * @returns {boolean}
@@ -147,7 +153,7 @@ export class Wordsearch {
    * gets the current config
    * @returns {WordsearchInput}
    */
-  public getConfig = (): WordsearchInput => this.config;
+  public getConfig = (): WordsearchConfig => this.config;
 
   /**
    * generates a board with the current input

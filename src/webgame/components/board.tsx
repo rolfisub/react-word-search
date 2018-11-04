@@ -5,6 +5,7 @@ import { Grid } from "@material-ui/core";
 
 export class Board extends React.Component<WordsearchOutput> {
   render() {
+    console.log(this.props);
     return (
       <Grid container>
         <Grid item xs={12}>

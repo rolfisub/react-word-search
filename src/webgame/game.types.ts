@@ -6,8 +6,8 @@ import {
 import { ActionTypes, StoreState } from "../common/redux";
 
 export interface Game extends Model {
-  game?: WordsearchOutput;
-  config?: WordsearchConfig;
+  game: WordsearchOutput;
+  config: WordsearchConfig;
 }
 
 export interface GameStoreState extends StoreState<Game> {}
