@@ -193,6 +193,46 @@ export class Wordsearch {
   };
 
   /**
+   * shows words in board and returns true if exists, else returns false
+   * @param {string} word
+   * @returns {boolean}
+   */
+  public showWord = (word: string): boolean => {
+    const index = this.getWordIndex(word);
+    if (index >= 0) {
+      //discover the word
+      this.discoverWord(index);
+    }
+    return index >= 0;
+  };
+
+  /**
+   * returns index of word if found, else returns -1
+   * @param {string} word
+   * @returns {number}
+   */
+  private getWordIndex = (word: string): number => {
+    for (let w = 0; w < this.output.words.length; w++) {
+      if (this.output.words[w].word === word) {
+        return w;
+      }
+    }
+    return -1;
+  };
+
+  /**
+   * sets discovered flag in board in case that index exists
+   * @param {number} wordIndex
+   */
+  private discoverWord = (wordIndex: number) => {
+    if (this.output.words[wordIndex]) {
+      this.output.words[wordIndex].pos.forEach(p => {
+        this.output.board[p.x][p.y].discovered = true;
+      });
+    }
+  };
+
+  /**
    * will go trough each cell and place a random letter if empty
    */
   private fillInRandomChars = () => {
