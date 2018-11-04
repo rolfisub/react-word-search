@@ -5,7 +5,6 @@ import { Grid } from "@material-ui/core";
 
 export class Board extends React.Component<WordsearchOutput> {
   render() {
-    console.log(this.props);
     return (
       <Grid container>
         <Grid item xs={12}>
@@ -21,7 +20,13 @@ export class Board extends React.Component<WordsearchOutput> {
               );
             })}
           </div>
-          <div style={{ height: this.props.board.length * 22, float: "left", margin: 10 }}>
+          <div
+            style={{
+              height: this.props.board.length * 22,
+              float: "left",
+              margin: 10
+            }}
+          >
             {this.props.words.map((w, i) => {
               return <p key={i}>{w}</p>;
             })}
