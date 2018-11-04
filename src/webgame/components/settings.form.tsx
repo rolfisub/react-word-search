@@ -12,6 +12,7 @@ import { Button } from "@material-ui/core";
 import { gameActionCreators } from "../redux/game.actions";
 
 interface SettingsFormProps {
+  newGame: () => void;
   saveConfig: (config: Partial<WordsearchInput>) => void;
 }
 
@@ -26,6 +27,7 @@ class SettingsClass extends React.Component<
     return (
       <form onSubmit={this.props.handleSubmit(this.submit)}>
         <div>
+          <h2>Game Settings</h2>
           <Field
             name={"size"}
             label={"Game Size"}
@@ -65,6 +67,13 @@ class SettingsClass extends React.Component<
           <Button color={"primary"} variant={"contained"} type={"submit"}>
             Save Config
           </Button>
+          <Button
+            color={"secondary"}
+            variant={"contained"}
+            onClick={this.props.newGame}
+          >
+            New Game
+          </Button>
         </div>
       </form>
     );
@@ -83,6 +92,9 @@ const mapDispatchToProps = (dispatch, props) => {
     ...props,
     saveConfig: (config: Partial<WordsearchInput>) => {
       dispatch(gameActionCreators.setConfig(config));
+    },
+    newGame: () => {
+      dispatch(gameActionCreators.create());
     }
   };
 };
