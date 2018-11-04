@@ -9,7 +9,8 @@ export enum WSDirections {
   UP_RIGHT,
   UP_LEFT,
   DOWN_RIGHT,
-  DOWN_LEFT
+  DOWN_LEFT,
+  NONE
 }
 
 export interface WordsConfig {
@@ -58,6 +59,8 @@ export interface Cell {
   pos: Vector2D;
   letter: string;
   discovered: boolean;
+  selected: boolean;
+  selectable: boolean;
 }
 
 export interface Word {
@@ -125,8 +128,14 @@ export class Wordsearch {
     //down right
     { x: 1, y: 1 },
     //down left
-    { x: 1, y: -1 }
+    { x: 1, y: -1 },
+    //NONE
+    { x: 0, y: 0 }
   ];
+
+  private selectedCount: number = 0;
+  private selectedDirection: WSDirections = WSDirections.NONE;
+  private currentWord: string = "";
 
   constructor(config?: Partial<WordsearchInput>) {
     if (!this.setConfig(config)) {
@@ -162,6 +171,20 @@ export class Wordsearch {
   public getConfig = (): WordsearchConfig => this.config;
 
   /**
+   * shows words in board and returns true if exists, else returns false
+   * @param {string} word
+   * @returns {boolean}
+   */
+  public showWord = (word: string): boolean => {
+    const index = this.getWordIndex(word);
+    if (index >= 0) {
+      //discover the word
+      this.discoverWord(index);
+    }
+    return index >= 0;
+  };
+
+  /**
    * generates a board with the current input
    * @param {Partial<WordsearchInput>} config
    * @returns {WordsearchOutput}
@@ -194,17 +217,59 @@ export class Wordsearch {
   };
 
   /**
-   * shows words in board and returns true if exists, else returns false
-   * @param {string} word
+   * select a cell based on position
+   * @param {Vector2D} pos
    * @returns {boolean}
    */
-  public showWord = (word: string): boolean => {
-    const index = this.getWordIndex(word);
-    if (index >= 0) {
-      //discover the word
-      this.discoverWord(index);
+  public selectCell = (pos: Vector2D): boolean => {
+    if (this.output.board[pos.x][pos.y].selectable) {
+      this.output.board[pos.x][pos.y].selected = true;
+      this.currentWord += this.output.board[pos.x][pos.y].letter;
+      this.selectedCount++;
+      this.calculateSelectables();
+      return true;
     }
-    return index >= 0;
+    return false;
+  };
+
+  /**
+   * resets the selection
+   */
+  public resetCurrentSelection = () => {
+    this.selectedCount = 0;
+    this.selectedDirection = WSDirections.NONE;
+    this.currentWord = "";
+    this.calculateSelectables();
+  };
+
+  /**
+   * recalculates the selectables cells depending on current selected ones
+   */
+  private calculateSelectables = () => {
+    //set selectables to true depending on conditions
+    if (this.selectedCount === 0) {
+      for (let x = 0; x < this.config.size; x++) {
+        for (let y = 0; y < this.config.size; y++) {
+          this.output.board[x][y].selectable = true;
+        }
+      }
+    }
+
+    /**
+     * make selectable all allowed directions cells
+     * adjacent to the selected cell
+     */
+    if (this.selectedCount === 1) {
+      console.log("make selectable adjacent cells that have allowd direction");
+    }
+
+    /**
+     * direction stablished, only one cell is allowed
+     * the one following on that direction
+     */
+    if (this.selectedCount > 1) {
+      console.log("direction stablished");
+    }
   };
 
   /**
@@ -553,7 +618,9 @@ export class Wordsearch {
             y
           },
           letter: "",
-          discovered: false
+          discovered: false,
+          selected: false,
+          selectable: true
         });
       }
     }
