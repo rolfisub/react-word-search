@@ -60,9 +60,14 @@ export interface Cell {
   discovered: boolean;
 }
 
+export interface Word {
+  word: string;
+  pos: Vector2D[];
+}
+
 export interface WordsearchOutput {
   board: Cell[][];
-  words: string[];
+  words: Word[];
 }
 
 export interface ValidationMsg {
@@ -168,7 +173,7 @@ export class Wordsearch {
         const words = this.getRandomWordsFromDictionary();
         const blankBoard = this.getBlankBoard();
         this.output = {
-          words,
+          words: [],
           board: blankBoard
         };
 
@@ -279,7 +284,7 @@ export class Wordsearch {
       }
     }
 
-    return null;
+    throw new Error("Could not fit word in board: " + word);
   };
 
   /**
@@ -293,13 +298,30 @@ export class Wordsearch {
     //draw the first letter
     cells[startPos.x][startPos.y].letter = wd.word[0];
 
+    const positions: Vector2D[] = [];
+
+    positions.push({
+      x: startPos.x,
+      y: startPos.y
+    });
+
     let newPos: Vector2D | null = startPos;
     for (let c = 1; c < wd.word.length; c++) {
       newPos = this.moveInDirection(newPos as Vector2D, wd.direction);
       if (newPos) {
         cells[newPos.x][newPos.y].letter = wd.word[c];
+        positions.push({
+          x: newPos.x,
+          y: newPos.y
+        });
       }
     }
+
+    //save word position data
+    this.output.words.push({
+      word: wd.word,
+      pos: positions
+    });
 
     return cells;
   };
@@ -316,11 +338,10 @@ export class Wordsearch {
     startPos: Vector2D,
     direction: WSDirections
   ): boolean => {
-    let collision = false;
     let newPos: Vector2D = { ...startPos };
     for (let c = 0; c < word.length; c++) {
       if (this.isCharCollision(word[c], newPos)) {
-        collision = true;
+        return true;
       }
       const np = this.moveInDirection(newPos, direction);
       if (np) {
@@ -329,7 +350,7 @@ export class Wordsearch {
         return true;
       }
     }
-    return collision;
+    return false;
   };
 
   /**

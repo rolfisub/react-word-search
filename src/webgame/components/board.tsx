@@ -28,7 +28,7 @@ export class Board extends React.Component<WordsearchOutput> {
             }}
           >
             {this.props.words.map((w, i) => {
-              return <p key={i}>{w}</p>;
+              return <p key={i}>{w.word}</p>;
             })}
           </div>
         </Grid>
