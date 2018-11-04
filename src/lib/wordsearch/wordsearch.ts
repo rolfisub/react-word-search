@@ -147,6 +147,7 @@ export class Wordsearch {
    */
   public setConfig = (config?: Partial<WordsearchInput>) => {
     if (config) {
+      config = this.parseStringsInConfig(config);
       this.config = deepmerge(this.defaultConfig, config as any, {
         arrayMerge: takeSrcArray
       });
@@ -204,6 +205,37 @@ export class Wordsearch {
       this.discoverWord(index);
     }
     return index >= 0;
+  };
+
+  /**
+   * parses strings to ints on numeric fields
+   * @param {Partial<WordsearchInput>} config
+   * @returns {Partial<WordsearchInput>}
+   */
+  private parseStringsInConfig = (
+    config: Partial<WordsearchInput>
+  ): Partial<WordsearchInput> => {
+    if (typeof config.size === "string") {
+      config.size = parseInt(config.size, 10);
+    }
+    if (config.wordsConfig) {
+      if (typeof config.wordsConfig.maxLength === "string") {
+        config.wordsConfig.maxLength = parseInt(
+          config.wordsConfig.maxLength,
+          10
+        );
+      }
+      if (typeof config.wordsConfig.minLength === "string") {
+        config.wordsConfig.minLength = parseInt(
+          config.wordsConfig.minLength,
+          10
+        );
+      }
+      if (typeof config.wordsConfig.amount === "string") {
+        config.wordsConfig.amount = parseInt(config.wordsConfig.amount, 10);
+      }
+    }
+    return config;
   };
 
   /**
