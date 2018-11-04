@@ -26,7 +26,6 @@ class GameClass extends React.Component<GameProps> {
       const words = await response.json();
       this.props.setConfig({
         wordsConfig: {
-          amount: 20,
           dictionary: words
         }
       });
