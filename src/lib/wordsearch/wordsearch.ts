@@ -105,7 +105,7 @@ export class Wordsearch {
     },
     allowedDirections: [
       WSDirections.DOWN,
-      // WSDirections.RIGHT,
+      WSDirections.RIGHT,
       WSDirections.DOWN_RIGHT
     ],
     allowWordOverlap: true
@@ -241,6 +241,11 @@ export class Wordsearch {
     this.selectedCount = 0;
     this.selectedDirection = WSDirections.NONE;
     this.currentWord = "";
+    for (let x = 0; x < this.config.size; x++) {
+      for (let y = 0; y < this.config.size; y++) {
+        this.output.board[x][y].selected = false;
+      }
+    }
     this.calculateSelectables();
   };
 
@@ -250,6 +255,7 @@ export class Wordsearch {
   private calculateSelectables = () => {
     //set selectables to true depending on conditions
     if (this.selectedCount === 0) {
+      console.log("set all to selectable");
       for (let x = 0; x < this.config.size; x++) {
         for (let y = 0; y < this.config.size; y++) {
           this.output.board[x][y].selectable = true;

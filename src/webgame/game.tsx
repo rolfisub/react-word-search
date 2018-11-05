@@ -7,10 +7,8 @@ import { Grid } from "@material-ui/core";
 import { SettingsReduxForm } from "./components/settings.form";
 import { connect } from "react-redux";
 import { gameActionCreators } from "./redux/game.actions";
-import { GameStoreState } from "./game.types";
 
 interface GameProps {
-  gameState: GameStoreState;
   setConfig: (wsConfig: Partial<WordsearchInput>) => void;
 }
 
@@ -34,30 +32,20 @@ class GameClass extends React.Component<GameProps> {
   };
 
   render() {
-    if (this.props.gameState) {
-      const { gameState } = this.props;
-      return (
-        <Grid container>
-          <Grid item xs={12} sm={12} md={6}>
-            <Board {...gameState.current.game} />
-          </Grid>
-          <Grid item xs={12} sm={12} md={6}>
-            <SettingsReduxForm />
-          </Grid>
+    return (
+      <Grid container>
+        <Grid item xs={12} sm={12} md={6}>
+          <Board />
         </Grid>
-      );
-    } else {
-      return <p>Loading...</p>;
-    }
+        <Grid item xs={12} sm={12} md={6}>
+          <SettingsReduxForm />
+        </Grid>
+      </Grid>
+    );
   }
 }
 
-const mapStateToProps = (state, props) => {
-  return {
-    ...props,
-    gameState: state.reducers.GameReducer
-  };
-};
+const mapStateToProps = (state, props) => props;
 
 const mapDispatchToProps = dispatch => {
   return {

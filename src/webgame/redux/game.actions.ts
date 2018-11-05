@@ -31,8 +31,8 @@ export const gameActionCreators = {
       const payload: Payload<Game> = {
         data: {
           id: "",
-          game: wsOutput,
-          config: wsConfig
+          game: { ...wsOutput },
+          config: { ...wsConfig }
         }
       };
 
@@ -52,8 +52,8 @@ export const gameActionCreators = {
       const payload: Payload<Game> = {
         data: {
           id: "",
-          game: wsOutput,
-          config: wsConfig
+          game: { ...wsOutput },
+          config: { ...wsConfig }
         }
       };
 
@@ -75,8 +75,8 @@ export const gameActionCreators = {
       const payload: Payload<Game> = {
         data: {
           id: "",
-          game: state.reducers.GameReducer.current.game,
-          config: wsConfig
+          game: { ...state.reducers.GameReducer.current.game },
+          config: { ...wsConfig }
         }
       };
 
@@ -102,8 +102,8 @@ export const gameActionCreators = {
       const payload: Payload<Game> = {
         data: {
           id: "",
-          game: wsOutput,
-          config: wsConfig
+          game: { ...wsOutput },
+          config: { ...wsConfig }
         }
       };
       const action: Action<Game> = {
