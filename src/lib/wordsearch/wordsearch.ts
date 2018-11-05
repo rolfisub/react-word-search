@@ -228,7 +228,7 @@ export class Wordsearch {
       this.output.board[pos.x][pos.y].selected = true;
       this.currentWord += this.output.board[pos.x][pos.y].letter;
       this.selectedCount++;
-      this.calculateSelectables();
+      this.calculateSelectables(pos);
       return true;
     }
     return false;
@@ -252,7 +252,7 @@ export class Wordsearch {
   /**
    * recalculates the selectables cells depending on current selected ones
    */
-  private calculateSelectables = () => {
+  private calculateSelectables = (lastSelection?: Vector2D) => {
     //set selectables to true depending on conditions
     if (this.selectedCount === 0) {
       console.log("set all to selectable");
@@ -269,6 +269,7 @@ export class Wordsearch {
      */
     if (this.selectedCount === 1) {
       console.log("make selectable adjacent cells that have allowd direction");
+
     }
 
     /**
