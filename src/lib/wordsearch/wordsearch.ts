@@ -284,19 +284,83 @@ export class Wordsearch {
     if (this.selectedCount > 1) {
       this.setAllTo("selectable", false);
       //determine direction
+      if (lastSelection) {
+        const selectedDirection = this.getAdjacentSelectedVectorDirection(
+          lastSelection
+        );
+        if (selectedDirection) {
+          const inversedDirection = this.getInverseDirection(selectedDirection);
+          if (inversedDirection) {
+            const sVector = this.moveInDirection(
+              lastSelection,
+              inversedDirection
+            );
+            if (sVector) {
+              this.output.board[sVector.x][sVector.y].selectable = true;
+            }
+          }
+        }
+      }
     }
   };
 
   /**
-   * finds out the direction between to given points
-   * @param {Vector2D} vector1
-   * @param {Vector2D} vector2
+   * returns the direction that is selected nex to that one
+   * @param {Vector2D} vector
+   * @returns {Vector2D | null}
+   */
+  private getAdjacentSelectedVectorDirection = (
+    vector: Vector2D
+  ): WSDirections | null => {
+    const allDirections = [
+      WSDirections.DOWN,
+      WSDirections.DOWN_LEFT,
+      WSDirections.DOWN_RIGHT,
+      WSDirections.LEFT,
+      WSDirections.RIGHT,
+      WSDirections.UP,
+      WSDirections.UP_LEFT,
+      WSDirections.UP_RIGHT
+    ];
+
+    for (let d = 0; d < allDirections.length; d++) {
+      const newVector = this.moveInDirection(vector, allDirections[d]);
+      if (newVector) {
+        if (this.output.board[newVector.x][newVector.y].selected) {
+          return allDirections[d];
+        }
+      }
+    }
+    return null;
+  };
+
+  /**
+   * returns the opposite direction from a given
+   * direction
+   * @param {WSDirections} direction
    * @returns {WSDirections | null}
    */
-  private getDirectionFrom2Vectors = (
-    vector1: Vector2D,
-    vector2: Vector2D
+  private getInverseDirection = (
+    direction: WSDirections
   ): WSDirections | null => {
+    switch (direction) {
+      case WSDirections.UP:
+        return WSDirections.DOWN;
+      case WSDirections.DOWN:
+        return WSDirections.UP;
+      case WSDirections.LEFT:
+        return WSDirections.RIGHT;
+      case WSDirections.RIGHT:
+        return WSDirections.LEFT;
+      case WSDirections.UP_RIGHT:
+        return WSDirections.DOWN_LEFT;
+      case WSDirections.UP_LEFT:
+        return WSDirections.DOWN_RIGHT;
+      case WSDirections.DOWN_RIGHT:
+        return WSDirections.UP_LEFT;
+      case WSDirections.DOWN_LEFT:
+        return WSDirections.UP_RIGHT;
+    }
     return null;
   };
 
