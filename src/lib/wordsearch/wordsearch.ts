@@ -107,7 +107,11 @@ export class Wordsearch {
       WSDirections.DOWN,
       WSDirections.RIGHT,
       WSDirections.DOWN_RIGHT,
-      WSDirections.LEFT
+      WSDirections.LEFT,
+      WSDirections.UP,
+      WSDirections.UP_LEFT,
+      WSDirections.UP_RIGHT,
+      WSDirections.DOWN_LEFT
     ],
     allowWordOverlap: true
   };
