@@ -106,7 +106,8 @@ export class Wordsearch {
     allowedDirections: [
       WSDirections.DOWN,
       WSDirections.RIGHT,
-      WSDirections.DOWN_RIGHT
+      WSDirections.DOWN_RIGHT,
+      WSDirections.LEFT
     ],
     allowWordOverlap: true
   };
@@ -255,12 +256,7 @@ export class Wordsearch {
   private calculateSelectables = (lastSelection?: Vector2D) => {
     //set selectables to true depending on conditions
     if (this.selectedCount === 0) {
-      console.log("set all to selectable");
-      for (let x = 0; x < this.config.size; x++) {
-        for (let y = 0; y < this.config.size; y++) {
-          this.output.board[x][y].selectable = true;
-        }
-      }
+      this.setAllTo('selectable', true);
     }
 
     /**
