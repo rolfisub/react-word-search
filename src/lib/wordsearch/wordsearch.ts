@@ -288,9 +288,9 @@ export class Wordsearch {
         const selectedDirection = this.getAdjacentSelectedVectorDirection(
           lastSelection
         );
-        if (selectedDirection) {
+        if (typeof selectedDirection === "number" && selectedDirection >= 0) {
           const inversedDirection = this.getInverseDirection(selectedDirection);
-          if (inversedDirection) {
+          if (typeof inversedDirection === "number" && inversedDirection >= 0) {
             const sVector = this.moveInDirection(
               lastSelection,
               inversedDirection
