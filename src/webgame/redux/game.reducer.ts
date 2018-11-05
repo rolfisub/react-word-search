@@ -7,7 +7,8 @@ export const GameReducer = (
       id: "",
       game: {
         board: [],
-        words: []
+        words: [],
+        currentWord: ""
       },
       config: {
         size: 0,

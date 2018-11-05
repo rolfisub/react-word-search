@@ -31,6 +31,11 @@ const styleClicked: CSSProperties = {
   color: "white"
 };
 
+const styleFound: CSSProperties = {
+  backgroundColor: "darkgreen",
+  color: "white"
+};
+
 interface CellProps extends CellInterface {
   submitCell: (pos: Vector2D) => void;
 }
@@ -73,8 +78,9 @@ class CellClass extends React.Component<CellProps, CellState> {
         onClick={this.onClick}
         style={{
           ...(this.state.isHover ? stylesHover : styles),
-          ...(this.props.discovered ? styleDiscovered : {}),
-          ...(this.props.selected ? styleClicked: {})
+          ...(this.props.shown ? styleDiscovered : {}),
+          ...(this.props.selected ? styleClicked : {}),
+          ...(this.props.found ? styleFound : {})
         }}
       >
         {this.props.letter}

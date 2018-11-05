@@ -58,7 +58,7 @@ export interface Vector2D {
 export interface Cell {
   pos: Vector2D;
   letter: string;
-  discovered: boolean;
+  shown: boolean;
   found: boolean;
   selected: boolean;
   selectable: boolean;
@@ -461,7 +461,7 @@ export class Wordsearch {
   private discoverWord = (wordIndex: number) => {
     if (this.output.words[wordIndex]) {
       this.output.words[wordIndex].pos.forEach(p => {
-        this.output.board[p.x][p.y].discovered = true;
+        this.output.board[p.x][p.y].shown = true;
       });
       this.output.words[wordIndex].shown = true;
     }
@@ -758,7 +758,7 @@ export class Wordsearch {
             y
           },
           letter: "",
-          discovered: false,
+          shown: false,
           found: false,
           selected: false,
           selectable: true

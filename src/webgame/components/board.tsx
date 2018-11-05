@@ -8,6 +8,7 @@ import { gameActionCreators } from "../redux/game.actions";
 
 interface BoardProps {
   resetSelection: () => void;
+  submitWord: () => void;
   game: WordsearchOutput;
 }
 
@@ -17,7 +18,9 @@ class BoardClass extends React.Component<BoardProps> {
     return (
       <Grid container>
         <Grid item xs={12}>
-          <div style={{ width: this.props.game.board.length * 22, float: "left" }}>
+          <div
+            style={{ width: this.props.game.board.length * 22, float: "left" }}
+          >
             {this.props.game.board.map((arr, x) => {
               return (
                 <span key={x}>
@@ -32,10 +35,20 @@ class BoardClass extends React.Component<BoardProps> {
           <Button
             variant={"contained"}
             size={"small"}
+            color={"secondary"}
             onClick={this.props.resetSelection}
           >
             Reset Selection
           </Button>
+          <Button
+            variant={"contained"}
+            size={"small"}
+            color={"primary"}
+            onClick={this.props.submitWord}
+          >
+            Submit Word
+          </Button>
+          Current Word is: {this.props.game.currentWord}
           <div
             style={{
               height: this.props.game.board.length * 22,
@@ -44,7 +57,7 @@ class BoardClass extends React.Component<BoardProps> {
             }}
           >
             {this.props.game.words.map((w, i) => {
-              return <Word word={w.word} key={i} />;
+              return <Word {...w} key={i} />;
             })}
           </div>
         </Grid>
@@ -57,13 +70,16 @@ const mapStateToProps = (state, props) => {
   return {
     ...props,
     game: state.reducers.GameReducer.current.game
-  }
+  };
 };
 const mapDispatchToProps = (dispatch, props) => {
   return {
     ...props,
     resetSelection: () => {
       dispatch(gameActionCreators.resetSelection());
+    },
+    submitWord: () => {
+      dispatch(gameActionCreators.submitWord());
     }
   };
 };

@@ -1,10 +1,6 @@
 import * as React from "react";
 import { Field, FieldArray, InjectedFormProps, reduxForm } from "redux-form";
-import {
-  Wordsearch,
-  WordsearchInput,
-  WSDirections
-} from "../../lib/wordsearch/wordsearch";
+import { WordsearchInput, WSDirections } from "../../lib/wordsearch/wordsearch";
 import { isRequired } from "../common/ui.field.validators";
 import { renderTextField } from "../common/render.fields";
 import { connect } from "react-redux";

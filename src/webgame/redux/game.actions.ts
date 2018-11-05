@@ -133,5 +133,13 @@ export const gameActionCreators = {
       ws.resetCurrentSelection();
       dispatch(gameActionCreators.show());
     };
+  },
+
+  submitWord(): ThunkAction<Promise<boolean>, GameStoreState, void, any> {
+    return async dispatch => {
+      const win = ws.submitCurrentWord();
+      dispatch(gameActionCreators.show());
+      return win;
+    };
   }
 };
