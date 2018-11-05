@@ -267,9 +267,14 @@ export class Wordsearch {
      * make selectable all allowed directions cells
      * adjacent to the selected cell
      */
-    if (this.selectedCount === 1) {
-      console.log("make selectable adjacent cells that have allowd direction");
-
+    if (this.selectedCount === 1 && lastSelection) {
+      this.setAllTo("selectable", false);
+      this.config.allowedDirections.forEach(wsDirection => {
+        const newVector = this.moveInDirection(lastSelection, wsDirection);
+        if (newVector) {
+          this.output.board[newVector.x][newVector.y].selectable = true;
+        }
+      });
     }
 
     /**
@@ -277,7 +282,34 @@ export class Wordsearch {
      * the one following on that direction
      */
     if (this.selectedCount > 1) {
-      console.log("direction stablished");
+      this.setAllTo("selectable", false);
+      //determine direction
+    }
+  };
+
+  /**
+   * finds out the direction between to given points
+   * @param {Vector2D} vector1
+   * @param {Vector2D} vector2
+   * @returns {WSDirections | null}
+   */
+  private getDirectionFrom2Vectors = (
+    vector1: Vector2D,
+    vector2: Vector2D
+  ): WSDirections | null => {
+    return null;
+  };
+
+  /**
+   * utility to set all cells field to a variable
+   * @param {string} field
+   * @param value
+   */
+  private setAllTo = (field: string, value: any) => {
+    for (let x = 0; x < this.config.size; x++) {
+      for (let y = 0; y < this.config.size; y++) {
+        this.output.board[x][y][field] = value;
+      }
     }
   };
 
