@@ -59,6 +59,7 @@ export interface Cell {
   pos: Vector2D;
   letter: string;
   discovered: boolean;
+  found: boolean;
   selected: boolean;
   selectable: boolean;
 }
@@ -66,11 +67,14 @@ export interface Cell {
 export interface Word {
   word: string;
   pos: Vector2D[];
+  found: boolean;
+  shown: boolean;
 }
 
 export interface WordsearchOutput {
   board: Cell[][];
   words: Word[];
+  currentWord: string;
 }
 
 export interface ValidationMsg {
@@ -140,7 +144,6 @@ export class Wordsearch {
 
   private selectedCount: number = 0;
   private selectedDirection: WSDirections = WSDirections.NONE;
-  private currentWord: string = "";
 
   constructor(config?: Partial<WordsearchInput>) {
     if (!this.setConfig(config)) {
@@ -177,14 +180,18 @@ export class Wordsearch {
 
   /**
    * shows words in board and returns true if exists, else returns false
+   * also handles if its a submital or a discovery
    * @param {string} word
+   * @param {boolean} submit
    * @returns {boolean}
    */
-  public showWord = (word: string): boolean => {
+  public showWord = (word: string, submit: boolean = false): boolean => {
     const index = this.getWordIndex(word);
-    if (index >= 0) {
+    if (index >= 0 && !submit) {
       //discover the word
       this.discoverWord(index);
+    } else if (index >= 0 && submit) {
+      this.setWordAsFound(index);
     }
     return index >= 0;
   };
@@ -203,7 +210,8 @@ export class Wordsearch {
         const blankBoard = this.getBlankBoard();
         this.output = {
           words: [],
-          board: blankBoard
+          board: blankBoard,
+          currentWord: ""
         };
 
         this.resetCurrentSelection();
@@ -231,7 +239,7 @@ export class Wordsearch {
   public selectCell = (pos: Vector2D): boolean => {
     if (this.output.board[pos.x][pos.y].selectable) {
       this.output.board[pos.x][pos.y].selected = true;
-      this.currentWord += this.output.board[pos.x][pos.y].letter;
+      this.output.currentWord += this.output.board[pos.x][pos.y].letter;
       this.selectedCount++;
       this.calculateSelectables(pos);
       return true;
@@ -245,7 +253,7 @@ export class Wordsearch {
   public resetCurrentSelection = () => {
     this.selectedCount = 0;
     this.selectedDirection = WSDirections.NONE;
-    this.currentWord = "";
+    this.output.currentWord = "";
     for (let x = 0; x < this.config.size; x++) {
       for (let y = 0; y < this.config.size; y++) {
         this.output.board[x][y].selected = false;
@@ -255,12 +263,36 @@ export class Wordsearch {
   };
 
   /**
+   * returns true if current word is a word from the list
+   * and also discovers it, returns false if it does not exists
+   * @returns {boolean}
+   */
+  public submitCurrentWord = (): boolean => {
+    const win = this.showWord(this.output.currentWord, true);
+    this.resetCurrentSelection();
+    return win;
+  };
+
+  /**
+   * word was actually found
+   * @param {number} wordIndex
+   */
+  private setWordAsFound = (wordIndex: number) => {
+    if (this.output.words[wordIndex]) {
+      this.output.words[wordIndex].pos.forEach(p => {
+        this.output.board[p.x][p.y].found = true;
+      });
+      this.output.words[wordIndex].found = true;
+    }
+  };
+
+  /**
    * recalculates the selectables cells depending on current selected ones
    */
   private calculateSelectables = (lastSelection?: Vector2D) => {
     //set selectables to true depending on conditions
     if (this.selectedCount === 0) {
-      this.setAllTo('selectable', true);
+      this.setAllTo("selectable", true);
     }
 
     /**
@@ -431,6 +463,7 @@ export class Wordsearch {
       this.output.words[wordIndex].pos.forEach(p => {
         this.output.board[p.x][p.y].discovered = true;
       });
+      this.output.words[wordIndex].shown = true;
     }
   };
 
@@ -562,7 +595,9 @@ export class Wordsearch {
     //save word position data
     this.output.words.push({
       word: wd.word,
-      pos: positions
+      pos: positions,
+      found: false,
+      shown: false
     });
 
     return cells;
@@ -724,6 +759,7 @@ export class Wordsearch {
           },
           letter: "",
           discovered: false,
+          found: false,
           selected: false,
           selectable: true
         });
