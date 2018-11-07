@@ -75,6 +75,7 @@ export interface WordsearchOutput {
   board: Cell[][];
   words: Word[];
   currentWord: string;
+  endGame: boolean;
 }
 
 export interface ValidationMsg {
@@ -211,7 +212,8 @@ export class Wordsearch {
         this.output = {
           words: [],
           board: blankBoard,
-          currentWord: ""
+          currentWord: "",
+          endGame: false
         };
 
         this.resetCurrentSelection();
@@ -270,7 +272,24 @@ export class Wordsearch {
   public submitCurrentWord = (): boolean => {
     const win = this.showWord(this.output.currentWord, true);
     this.resetCurrentSelection();
+    this.checkEnd();
     return win;
+  };
+
+  /**
+   * checks for endgame
+   * @returns {boolean}
+   */
+  private checkEnd = () => {
+    let fORd = 0;
+    for (let w = 0; w < this.config.size; w++) {
+      if (this.output.words[w].found || this.output.words[w].shown) {
+        fORd++;
+      }
+    }
+    const isEnd = fORd === this.output.words.length;
+    this.output.endGame = isEnd;
+    return isEnd;
   };
 
   /**
