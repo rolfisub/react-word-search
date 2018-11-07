@@ -11,7 +11,7 @@
     "noImplicitThis": true,
     "noImplicitAny": false,
     "strictNullChecks": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": false,
     "rootDirs": ["./src"],
     "baseUrl": "./src"
   },

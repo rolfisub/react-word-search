@@ -1,4 +1,4 @@
-import deepmerge from "deepmerge";
+import * as deepmerge from "deepmerge";
 import * as _ from "lodash";
 
 export enum WSDirections {
