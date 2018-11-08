@@ -149,10 +149,8 @@ export class Wordsearch {
   private selectedCount: number = 0;
   private selectedDirection: WSDirections = WSDirections.NONE;
 
-  constructor(config?: Partial<WordsearchInput>) {
-    if (!this.setConfig(config)) {
-      this.config = { ...this.defaultConfig };
-    }
+  constructor() {
+    this.config = { ...this.defaultConfig };
   }
 
   /**
@@ -169,7 +167,7 @@ export class Wordsearch {
   public setConfig = (config?: Partial<WordsearchInput>) => {
     if (config) {
       config = this.parseStringsInConfig(config);
-      this.config = _.mergeWith(this.defaultConfig, config, takeSrcArray);
+      this.config = _.mergeWith(this.config, config, takeSrcArray);
     }
     return !!config;
   };
@@ -870,12 +868,6 @@ export class Wordsearch {
     //validate that dictionary contains enough words
     if (wc.dictionary.length < wc.amount) {
       invalid.msg = "Amount of words cannot be greater than available ones.";
-      return invalid;
-    }
-
-    //empty dictionary
-    if (wc.dictionary.length === 0) {
-      invalid.msg = "dictionary is empty";
       return invalid;
     }
 

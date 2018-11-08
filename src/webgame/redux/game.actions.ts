@@ -11,18 +11,6 @@ import {
 const ws = new Wordsearch();
 
 export const gameActionCreators = {
-  /*index(): ThunkAction<void, GameStoreState, void, any> {
-    return async (dispatch): Promise<void> => {
-      console.log("index");
-    };
-  },
-  
-  edit(): ThunkAction<void, GameStoreState, void, any> {
-    return async (dispatch): Promise<void> => {
-      console.log("edit");
-    };
-  },*/
-
   show(): ThunkAction<void, GameStoreState, void, any> {
     return async (dispatch): Promise<void> => {
       const wsOutput = ws.getOutput();
