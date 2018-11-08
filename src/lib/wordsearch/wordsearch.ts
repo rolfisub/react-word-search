@@ -157,6 +157,7 @@ export class Wordsearch {
 
   private selectedCount: number = 0;
   private selectedDirection: WSDirections = WSDirections.NONE;
+  private generationTimes: number = 0;
 
   constructor() {
     this.config = { ...this.defaultConfig };
@@ -232,12 +233,22 @@ export class Wordsearch {
         //fill in chars
         this.fillInRandomChars();
 
+        //reset generation times
+        this.generationTimes = 0;
+
         return this.output;
       } catch (e) {
         //try again until we can generate the game
-        //dangerous
-        //TODO: need to implement fail safe
-        return this.generate(config);
+        //max 50 iterations
+        this.generationTimes++;
+        if (this.generationTimes > 50) {
+          this.generationTimes = 0;
+          throw new Error(
+            "Unable to generate game, max amount of iterations reached."
+          );
+        } else {
+          return this.generate(config);
+        }
       }
     } else {
       throw new Error("Invalid configuration: " + valid.msg);

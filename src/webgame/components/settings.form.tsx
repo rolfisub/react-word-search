@@ -56,7 +56,6 @@ class SettingsClass extends React.Component<
             name={"allowedDirections"}
             props={{ options: WSDirections }}
             component={props => {
-              console.log(props);
               return null;
             }}
           />

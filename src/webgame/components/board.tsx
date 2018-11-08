@@ -14,7 +14,6 @@ interface BoardProps {
 
 class BoardClass extends React.Component<BoardProps> {
   render() {
-    console.log(this.props.game);
     return (
       <Grid container>
         <Grid item xs={12}>
