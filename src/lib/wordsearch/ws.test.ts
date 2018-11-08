@@ -5,80 +5,79 @@ import { Wordsearch } from "./wordsearch";
 const expect = chai.expect;
 
 describe("Word Search Engine:", () => {
-  const ws = new Wordsearch();
   describe("Config Validation: ", () => {
     describe("Validation Errors Board Size: ", () => {
+      const ws = new Wordsearch();
       //board size
       const boardSize =
         "Invalid configuration: Board size must be between 6 and 50";
       it(boardSize + " min test", () => {
-        ws.setConfig({ size: 5 });
-        expect(() => ws.generate()).throw(boardSize);
+        expect(() => ws.generate({ size: 5 })).throw(boardSize);
       });
       it(boardSize + " max test", () => {
-        ws.setConfig({ size: 51 });
-        expect(() => ws.generate()).throw(boardSize);
-        //set to normal range
-        ws.setConfig({ size: 16 });
+        expect(() => ws.generate({ size: 51 })).throw(boardSize);
       });
     });
 
     describe("Validation Errors Word Amount: ", () => {
+      const ws = new Wordsearch();
       //amount of words
       const wordAmount =
         "Invalid configuration: Amount of words must be between 1 and 50.";
       it(wordAmount + " min test", () => {
-        ws.setConfig({ wordsConfig: { amount: 0 } });
-        //console.log(ws.getConfig());
-        expect(() => ws.generate()).throw(wordAmount);
+        expect(() => ws.generate({ wordsConfig: { amount: 0 } })).throw(
+          wordAmount
+        );
       });
       it(wordAmount + " max test", () => {
-        ws.setConfig({ wordsConfig: { amount: 51 } });
-        //console.log(ws.getConfig());
-        expect(() => ws.generate()).throw(wordAmount);
-        //set to normal range
-        ws.setConfig({ wordsConfig: { amount: 4 } });
+        expect(() => ws.generate({ wordsConfig: { amount: 51 } })).throw(
+          wordAmount
+        );
       });
     });
 
     describe("Validation Errors Word Length: ", () => {
+      const ws = new Wordsearch();
       it("Word min length.", () => {
         const minWordLength =
           "Invalid configuration: Word min length must be less than board size.";
-        ws.setConfig({ wordsConfig: { minLength: 30 } });
-        expect(() => ws.generate()).throw(minWordLength);
+        expect(() => ws.generate({ wordsConfig: { minLength: 30 } })).throw(
+          minWordLength
+        );
         ws.setConfig({ wordsConfig: { minLength: 2 } });
       });
       it("Word max length.", () => {
         const maxWordLength =
           "Invalid configuration: Word max length should not be more than board size.";
-        ws.setConfig({ wordsConfig: { maxLength: 30 } });
-        expect(() => ws.generate()).throw(maxWordLength);
-        ws.setConfig({ wordsConfig: { maxLength: 10 } });
+        expect(() => ws.generate({ wordsConfig: { maxLength: 30 } })).throw(
+          maxWordLength
+        );
       });
     });
 
     describe("Dictionary Validation: ", () => {
+      const ws = new Wordsearch();
       it("Word amount cannot be greater than available.", () => {
         const wordAmount =
           "Invalid configuration: Amount of words cannot be greater than available ones.";
-        ws.setConfig({
-          wordsConfig: { dictionary: ["alto", "bajo"], amount: 3 }
-        });
-        expect(() => ws.generate()).throw(wordAmount);
-        //set passing range
-        ws.setConfig({
-          wordsConfig: { dictionary: ["alto", "bajo"], amount: 1 }
-        });
+        expect(() =>
+          ws.generate({
+            wordsConfig: { dictionary: ["alto", "bajo"], amount: 3 }
+          })
+        ).throw(wordAmount);
       });
     });
 
     describe("Direction validation: ", () => {
+      const ws = new Wordsearch();
       it("At least one direction.", () => {
         const atLeastOneDir =
           "Invalid configuration: At least one direction must be specified";
-        ws.setConfig({ allowedDirections: [] });
-        expect(() => ws.generate()).throw(atLeastOneDir);
+        expect(() =>
+          ws.generate({
+            allowedDirections: []
+          })
+        ).throw(atLeastOneDir);
       });
     });
   });

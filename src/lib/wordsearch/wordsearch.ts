@@ -92,7 +92,16 @@ export interface WordDrawInstruction {
  * had to get rid of default dictionary until I find isomorphic words package
  * @type {string[]}
  */
-const commonEnglishWords: string[] = [];
+const commonEnglishWords: string[] = [
+  "one",
+  "two",
+  "three",
+  "four",
+  "five",
+  "six",
+  "seven",
+  "eight"
+];
 
 const takeSrcArray = (dest, src) => {
   if (_.isArray(dest)) {
