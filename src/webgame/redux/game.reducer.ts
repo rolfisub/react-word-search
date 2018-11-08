@@ -8,7 +8,8 @@ export const GameReducer = (
       game: {
         board: [],
         words: [],
-        currentWord: ""
+        currentWord: "",
+        endGame: false
       },
       config: {
         size: 0,

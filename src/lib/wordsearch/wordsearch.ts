@@ -1,4 +1,3 @@
-import * as deepmerge from "deepmerge";
 import * as _ from "lodash";
 
 export enum WSDirections {
@@ -95,7 +94,11 @@ export interface WordDrawInstruction {
  */
 const commonEnglishWords: string[] = [];
 
-const takeSrcArray = (dest, src) => src;
+const takeSrcArray = (dest, src) => {
+  if (_.isArray(dest)) {
+    return src;
+  }
+};
 
 export class Wordsearch {
   protected config: WordsearchConfig;
@@ -166,9 +169,7 @@ export class Wordsearch {
   public setConfig = (config?: Partial<WordsearchInput>) => {
     if (config) {
       config = this.parseStringsInConfig(config);
-      this.config = deepmerge(this.defaultConfig, config as any, {
-        arrayMerge: takeSrcArray
-      });
+      this.config = _.mergeWith(this.defaultConfig, config, takeSrcArray);
     }
     return !!config;
   };
