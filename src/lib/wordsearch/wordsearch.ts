@@ -234,7 +234,10 @@ export class Wordsearch {
 
         return this.output;
       } catch (e) {
-        throw new Error("Failed to create webgame: " + e.toString());
+        //try again until we can generate the game
+        //dangerous
+        //TODO: need to implement fail safe
+        return this.generate(config);
       }
     } else {
       throw new Error("Invalid configuration: " + valid.msg);
