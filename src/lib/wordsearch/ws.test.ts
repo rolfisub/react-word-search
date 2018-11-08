@@ -81,4 +81,21 @@ describe("Word Search Engine:", () => {
       });
     });
   });
+
+  describe("Public API:", () => {
+    //getOutput
+    describe("getOutput", () => {
+      const ws = new Wordsearch();
+      it("exists", () => {
+        expect(ws.getOutput()).equal(undefined);
+      });
+    });
+    //setConfig
+    //getConfig
+    //showWord
+    //generate
+    //selectCell
+    //resetCurrentSelection
+    //submitCurrentWord
+  });
 });
