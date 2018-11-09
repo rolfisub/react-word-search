@@ -36,7 +36,6 @@ export const gameActionCreators = {
     return async (dispatch): Promise<void> => {
       const wsOutput = ws.generate();
       const wsConfig = ws.getConfig();
-
       const payload: Payload<Game> = {
         data: {
           id: "",

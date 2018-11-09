@@ -311,11 +311,26 @@ export class Wordsearch {
   };
 
   /**
+   * prints an ascii representation of the board to the console
+   */
+  public consolePrintBoard = () => {
+    for (let x = 0; x < this.config.size; x++) {
+      for (let y = 0; y < this.config.size; y++) {
+        const lett = this.output.board[x][y].letter
+          ? this.output.board[x][y].letter
+          : " ";
+        process.stdout.write("|" + lett);
+      }
+      console.log("|");
+    }
+  };
+
+  /**
    * sell all letters and words to their corresponding case
    */
   private setCase = () => {
     if (this.output) {
-      this.setAllTo("letter", letter => this.getStrInCase(letter));
+      this.setCellFieldTo("letter", letter => this.getStrInCase(letter));
       this.output.words = this.output.words.map(
         (w: Word): Word => {
           return {
@@ -348,8 +363,10 @@ export class Wordsearch {
   private checkEnd = () => {
     let fORd = 0;
     for (let w = 0; w < this.config.size; w++) {
-      if (this.output.words[w].found || this.output.words[w].shown) {
-        fORd++;
+      if (this.output.words[w]) {
+        if (this.output.words[w].found || this.output.words[w].shown) {
+          fORd++;
+        }
       }
     }
     const isEnd = fORd === this.output.words.length;
@@ -376,7 +393,7 @@ export class Wordsearch {
   private calculateSelectables = (lastSelection?: Vector2D) => {
     //set selectables to true depending on conditions
     if (this.selectedCount === 0) {
-      this.setAllTo("selectable", true);
+      this.setCellFieldTo("selectable", true);
     }
 
     /**
@@ -384,7 +401,7 @@ export class Wordsearch {
      * adjacent to the selected cell
      */
     if (this.selectedCount === 1 && lastSelection) {
-      this.setAllTo("selectable", false);
+      this.setCellFieldTo("selectable", false);
       this.config.allowedDirections.forEach(wsDirection => {
         const newVector = this.moveInDirection(lastSelection, wsDirection);
         if (newVector) {
@@ -398,7 +415,7 @@ export class Wordsearch {
      * the one following on that direction
      */
     if (this.selectedCount > 1) {
-      this.setAllTo("selectable", false);
+      this.setCellFieldTo("selectable", false);
       //determine direction
       if (lastSelection) {
         const selectedDirection = this.getAdjacentSelectedVectorDirection(
@@ -485,9 +502,10 @@ export class Wordsearch {
    * @param {string} field
    * @param value
    */
-  private setAllTo = (field: string, value: any) => {
-    for (let x = 0; x < this.config.size; x++) {
-      for (let y = 0; y < this.config.size; y++) {
+  private setCellFieldTo = (field: string, value: any) => {
+    const currentSize = this.output.board.length;
+    for (let x = 0; x < currentSize; x++) {
+      for (let y = 0; y < currentSize; y++) {
         if (typeof value === "function") {
           this.output.board[x][y][field] = value(
             this.output.board[x][y][field]
@@ -578,21 +596,6 @@ export class Wordsearch {
     const abc = this.getStrInCase("abcdefghijklmnopqrstuvwxyz");
     const charPos = this.getRandomInteger(0, abc.length - 1);
     return abc[charPos];
-  };
-
-  /**
-   * prints an ascii representation of the board to the console
-   */
-  private consolePrintBoard = () => {
-    for (let x = 0; x < this.config.size; x++) {
-      for (let y = 0; y < this.config.size; y++) {
-        const lett = this.output.board[x][y].letter
-          ? this.output.board[x][y].letter
-          : " ";
-        process.stdout.write("|" + lett);
-      }
-      console.log("|");
-    }
   };
 
   /**
