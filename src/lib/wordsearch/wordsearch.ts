@@ -132,14 +132,18 @@ export class Wordsearch {
       debug: true
     },
     allowedDirections: [
+      /**
+       * un-natural directions are disabled
+       * by default
+       */
       WSDirections.DOWN,
       WSDirections.RIGHT,
       WSDirections.DOWN_RIGHT,
-      WSDirections.LEFT,
+      //WSDirections.LEFT,
       WSDirections.UP,
-      WSDirections.UP_LEFT,
+      //WSDirections.UP_LEFT,
       WSDirections.UP_RIGHT,
-      WSDirections.DOWN_LEFT
+      //WSDirections.DOWN_LEFT
     ],
     allowWordOverlap: true
   };

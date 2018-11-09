@@ -22,18 +22,18 @@ class ControlsClass extends React.Component<ControlsActions> {
           <Button
             variant={"contained"}
             size={"small"}
-            color={"secondary"}
-            onClick={this.props.resetSelection}
-          >
-            Reset Selection
-          </Button>
-          <Button
-            variant={"contained"}
-            size={"small"}
             color={"primary"}
             onClick={this.props.submitWord}
           >
             Submit Word
+          </Button>
+          <Button
+            variant={"contained"}
+            size={"small"}
+            color={"secondary"}
+            onClick={this.props.resetSelection}
+          >
+            Reset
           </Button>
         </div>
       );
