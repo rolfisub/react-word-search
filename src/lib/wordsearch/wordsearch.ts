@@ -348,9 +348,31 @@ export class Wordsearch {
     if (this.config.wordsConfig.random) {
       return this.getRandomWordsFromDictionary();
     } else {
-      //code for returning sequential valid words
-      return [];
+      return this.getSequentialWords();
     }
+  };
+
+  /**
+   * gets a list of words from the dictionary sequentially that meet the criteria
+   * @returns {string[]}
+   */
+  private getSequentialWords = (): string[] => {
+    const words: string[] = [];
+    let w = 0;
+    while (words.length < this.config.wordsConfig.amount) {
+      if (w === this.config.wordsConfig.dictionary.length) {
+        this.throwError(
+          "dictionary does not contain enough words to fulfill your request"
+        );
+      }
+      const word = this.config.wordsConfig.dictionary[w];
+      const shouldWe = this.wordCriteria(word, words);
+      if (shouldWe) {
+        words.push(word);
+      }
+      w++;
+    }
+    return words;
   };
 
   /**
