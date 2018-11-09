@@ -2,11 +2,9 @@ import * as React from "react";
 import * as fetch from "isomorphic-fetch";
 import { config } from "./config";
 import { WordsearchInput } from "../lib/wordsearch/wordsearch";
-import { Board } from "./components/board";
-import { Grid } from "@material-ui/core";
-import { SettingsReduxForm } from "./components/settings.form";
 import { connect } from "react-redux";
 import { gameActionCreators } from "./redux/game.actions";
+import { Layout } from "./components/layout";
 
 interface GameProps {
   setConfig: (wsConfig: Partial<WordsearchInput>) => void;
@@ -32,16 +30,7 @@ class GameClass extends React.Component<GameProps> {
   };
 
   render() {
-    return (
-      <Grid container>
-        <Grid item xs={12} sm={12} md={6}>
-          <Board />
-        </Grid>
-        <Grid item xs={12} sm={12} md={6}>
-          <SettingsReduxForm />
-        </Grid>
-      </Grid>
-    );
+    return <Layout />;
   }
 }
 

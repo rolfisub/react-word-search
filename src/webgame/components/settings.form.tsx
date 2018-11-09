@@ -8,69 +8,69 @@ import { Button } from "@material-ui/core";
 import { gameActionCreators } from "../redux/game.actions";
 
 interface SettingsFormProps {
-  newGame: () => void;
-  saveConfig: (config: Partial<WordsearchInput>) => void;
+  newGame: (config: Partial<WordsearchInput>) => void;
 }
 
 class SettingsClass extends React.Component<
   SettingsFormProps & InjectedFormProps<WordsearchInput>
 > {
   submit = values => {
-    this.props.saveConfig(values);
+    this.props.newGame(values);
   };
 
   render() {
     return (
-      <form onSubmit={this.props.handleSubmit(this.submit)}>
-        <div>
-          <h2>Game Settings</h2>
-          <Field
-            name={"size"}
-            label={"Game Size"}
-            required={true}
-            validate={[isRequired]}
-            component={renderTextField as any}
-          />
-          <Field
-            name={"wordsConfig.amount"}
-            label={"Amount of words to Settings"}
-            required={true}
-            validate={[isRequired]}
-            component={renderTextField as any}
-          />
-          <Field
-            name={"wordsConfig.minLength"}
-            label={"Minimum word length"}
-            required={true}
-            validate={[isRequired]}
-            component={renderTextField as any}
-          />
-          <Field
-            name={"wordsConfig.maxLength"}
-            label={"Maximum word length"}
-            required={true}
-            validate={[isRequired]}
-            component={renderTextField as any}
-          />
-          <FieldArray
-            name={"allowedDirections"}
-            props={{ options: WSDirections }}
-            component={props => {
-              return null;
-            }}
-          />
-          <Button color={"primary"} variant={"contained"} type={"submit"}>
-            Save Config
-          </Button>
-          <Button
-            color={"secondary"}
-            variant={"contained"}
-            onClick={this.props.newGame}
-          >
-            New Game
-          </Button>
-        </div>
-      </form>
+      <div
+        style={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center"
+        }}
+      >
+        <form onSubmit={this.props.handleSubmit(this.submit)}>
+          <div>
+            <h2>Game Settings</h2>
+            <Field
+              name={"size"}
+              label={"Game Size"}
+              required={true}
+              validate={[isRequired]}
+              component={renderTextField as any}
+            />
+            <Field
+              name={"wordsConfig.amount"}
+              label={"Amount of words to Settings"}
+              required={true}
+              validate={[isRequired]}
+              component={renderTextField as any}
+            />
+            <Field
+              name={"wordsConfig.minLength"}
+              label={"Minimum word length"}
+              required={true}
+              validate={[isRequired]}
+              component={renderTextField as any}
+            />
+            <Field
+              name={"wordsConfig.maxLength"}
+              label={"Maximum word length"}
+              required={true}
+              validate={[isRequired]}
+              component={renderTextField as any}
+            />
+            <FieldArray
+              name={"allowedDirections"}
+              props={{ options: WSDirections }}
+              component={props => {
+                return null;
+              }}
+            />
+            <Button color={"primary"} variant={"contained"} type={"submit"}>
+              New Game
+            </Button>
+          </div>
+        </form>
+      </div>
     );
   }
 }
@@ -85,11 +85,9 @@ const mapStateToProps = (state, props) => {
 const mapDispatchToProps = (dispatch, props) => {
   return {
     ...props,
-    saveConfig: (config: Partial<WordsearchInput>) => {
-      dispatch(gameActionCreators.setConfig(config));
-    },
-    newGame: () => {
-      dispatch(gameActionCreators.create());
+    newGame: async (config: Partial<WordsearchInput>) => {
+      await dispatch(gameActionCreators.setConfig(config));
+      await dispatch(gameActionCreators.create());
     }
   };
 };

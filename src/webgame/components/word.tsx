@@ -13,21 +13,17 @@ class WordClass extends React.Component<WordProps> {
     this.props.showWord(this.props.word);
   };
   render() {
+    const { found, shown, word } = this.props;
     return (
-      <div style={{ float: "left", margin: 2, border: "1px dotted" }}>
-        <p>{this.props.word}</p>
-        {this.props.found ? <p>YEY!</p> : null}
-        {this.props.shown ? <p>cheat!</p> : null}
-        {!this.props.found && !this.props.shown ? (
-          <Button
-            variant={"contained"}
-            size={"small"}
-            color={"secondary"}
-            onClick={this.showWord}
-          >
-            Show
-          </Button>
-        ) : null}
+      <div style={{ float: "left", margin: 2 }}>
+        <Button
+          variant={"extendedFab"}
+          size={"small"}
+          color={found ? "primary" : shown ? "secondary" : "default"}
+          onClick={this.showWord}
+        >
+          {word}
+        </Button>
       </div>
     );
   }
