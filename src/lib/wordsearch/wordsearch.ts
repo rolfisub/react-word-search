@@ -40,6 +40,12 @@ export interface WordsConfig {
    */
   case: WSCase;
   /**
+   * specify whether we are picking random words
+   * or if we are using sequential
+   * @default true
+   */
+  random: boolean;
+  /**
    * send debug info to the console?
    */
   debug: boolean;
@@ -48,6 +54,7 @@ export interface WordsConfig {
 export interface WordsearchInput {
   size: number;
   wordsConfig: Partial<WordsConfig>;
+
   allowedDirections: WSDirections[];
   allowWordOverlap: boolean;
 }
@@ -130,6 +137,7 @@ export class Wordsearch {
       maxLength: 8,
       dictionary: [...commonEnglishWords],
       case: WSCase.UPPER,
+      random: true,
       debug: true
     },
     allowedDirections: [
@@ -233,7 +241,7 @@ export class Wordsearch {
     const valid = this.validConfig();
     if (valid.valid) {
       try {
-        const words = this.getRandomWordsFromDictionary();
+        const words = this.getWords();
         const blankBoard = this.getBlankBoard();
         this.output = {
           words: [],
@@ -329,6 +337,19 @@ export class Wordsearch {
         process.stdout.write("|" + lett);
       }
       console.log("|");
+    }
+  };
+
+  /**
+   * returns the list of words to be used bsed on config
+   * @returns {string[]}
+   */
+  private getWords = (): string[] => {
+    if (this.config.wordsConfig.random) {
+      return this.getRandomWordsFromDictionary();
+    } else {
+      //code for returning sequential valid words
+      return [];
     }
   };
 
@@ -878,29 +899,36 @@ export class Wordsearch {
   };
 
   /**
+   * checks if a words meets the criteria
+   * @param word
+   * @param {string[]} list
+   * @returns {boolean}
+   */
+  private wordCriteria = (word, list: string[]): boolean => {
+    const wc = this.config.wordsConfig;
+    return (
+      //is a string
+      typeof word === "string" &&
+      //has something in it
+      word.length > 0 &&
+      //is aword that we dont have yet
+      list.indexOf(word) < 0 &&
+      //is the correct size
+      word.length >= wc.minLength &&
+      word.length <= wc.maxLength
+    );
+  };
+
+  /**
    * returns a list of random words from the dictionary that meet
    * the configuration criteria
    * @returns {string[]}
    */
   private getRandomWordsFromDictionary = (): string[] => {
     const words: string[] = [];
-    const wordCriteria = (word, list: string[]): boolean => {
-      const wc = this.config.wordsConfig;
-      return (
-        //is a string
-        typeof word === "string" &&
-        //has something in it
-        word.length > 0 &&
-        //is aword that we dont have yet
-        list.indexOf(word) < 0 &&
-        //is the correct size
-        word.length >= wc.minLength &&
-        word.length <= wc.maxLength
-      );
-    };
     while (words.length < this.config.wordsConfig.amount) {
       const word = this.getRandomWord();
-      const shouldWe = wordCriteria(word, words);
+      const shouldWe = this.wordCriteria(word, words);
       if (shouldWe) {
         words.push(word);
       }
