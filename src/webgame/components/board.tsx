@@ -45,7 +45,20 @@ class BoardClass extends React.Component<BoardProps> {
                 justifyContent: "center"
               }}
             >
-              <div>Submit word:{this.props.game.currentWord}</div>
+              <div style={{ margin: 10 }}>
+                Submit word: {this.props.game.currentWord}
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={12}>
+            <div
+              style={{
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center"
+              }}
+            >
+              <span style={{ color: "red" }}>{this.props.game.error}</span>
             </div>
           </Grid>
         </Grid>

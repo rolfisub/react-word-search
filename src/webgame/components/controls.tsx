@@ -24,16 +24,18 @@ class ControlsClass extends React.Component<ControlsActions> {
             size={"small"}
             color={"primary"}
             onClick={this.props.submitWord}
+            style={{margin:10}}
           >
-            Submit Word
+            Submit
           </Button>
           <Button
-            variant={"contained"}
+            variant={"extendedFab"}
             size={"small"}
-            color={"secondary"}
+            color={"primary"}
             onClick={this.props.resetSelection}
+            style={{margin:10, height:10}}
           >
-            Reset
+            Cancel
           </Button>
         </div>
       );

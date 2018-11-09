@@ -10,13 +10,13 @@ export const Layout = () => (
     <Grid item xs={12}>
       <Board />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <Controls />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <Words />
     </Grid>
-    <Grid xs={12}>
+    <Grid item xs={12}>
       <SettingsReduxForm />
     </Grid>
   </Grid>

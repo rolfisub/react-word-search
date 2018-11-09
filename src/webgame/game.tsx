@@ -39,7 +39,8 @@ const mapStateToProps = (state, props) => props;
 const mapDispatchToProps = dispatch => {
   return {
     setConfig: async (wsConfig: Partial<WordsearchInput>) => {
-      dispatch(gameActionCreators.setConfig(wsConfig));
+      await dispatch(gameActionCreators.setConfig(wsConfig));
+      await dispatch(gameActionCreators.create());
     }
   };
 };

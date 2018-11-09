@@ -85,6 +85,7 @@ export interface WordsearchOutput {
   words: Word[];
   currentWord: string;
   endGame: boolean;
+  error: string;
 }
 
 export interface ValidationMsg {
@@ -138,11 +139,11 @@ export class Wordsearch {
        */
       WSDirections.DOWN,
       WSDirections.RIGHT,
-      WSDirections.DOWN_RIGHT,
+      WSDirections.DOWN_RIGHT
       //WSDirections.LEFT,
-      WSDirections.UP,
+      //WSDirections.UP,
       //WSDirections.UP_LEFT,
-      WSDirections.UP_RIGHT,
+      //WSDirections.UP_RIGHT,
       //WSDirections.DOWN_LEFT
     ],
     allowWordOverlap: true
@@ -238,7 +239,8 @@ export class Wordsearch {
           words: [],
           board: blankBoard,
           currentWord: "",
-          endGame: false
+          endGame: false,
+          error: ""
         };
 
         this.resetCurrentSelection();
@@ -259,7 +261,7 @@ export class Wordsearch {
         this.generationTimes++;
         if (this.generationTimes > 50) {
           this.generationTimes = 0;
-          throw new Error(
+          this.throwError(
             "Unable to generate game, max amount of iterations reached."
           );
         } else {
@@ -267,8 +269,9 @@ export class Wordsearch {
         }
       }
     } else {
-      throw new Error("Invalid configuration: " + valid.msg);
+      this.throwError("Invalid configuration: " + valid.msg);
     }
+    return this.output;
   };
 
   /**
@@ -327,6 +330,15 @@ export class Wordsearch {
       }
       console.log("|");
     }
+  };
+
+  /**
+   * throws and error
+   * @param {string} error
+   */
+  private throwError = (error: string) => {
+    this.output.error = error;
+    throw new Error(error);
   };
 
   /**
@@ -656,7 +668,7 @@ export class Wordsearch {
       }
     }
 
-    throw new Error("Could not fit word in board: " + word);
+    return this.throwError("Could not fit word in board: " + word);
   };
 
   /**

@@ -34,21 +34,25 @@ export const gameActionCreators = {
 
   create(): ThunkAction<void, GameStoreState, void, any> {
     return async (dispatch): Promise<void> => {
-      const wsOutput = ws.generate();
-      const wsConfig = ws.getConfig();
-      const payload: Payload<Game> = {
-        data: {
-          id: "",
-          game: { ...wsOutput },
-          config: { ...wsConfig }
-        }
-      };
+      try {
+        const wsOutput = ws.generate();
+        const wsConfig = ws.getConfig();
+        const payload: Payload<Game> = {
+          data: {
+            id: "",
+            game: { ...wsOutput },
+            config: { ...wsConfig }
+          }
+        };
 
-      const action: Action<Game> = {
-        type: GameActionTypes.create,
-        payload
-      };
-      dispatch(action);
+        const action: Action<Game> = {
+          type: GameActionTypes.create,
+          payload
+        };
+        dispatch(action);
+      } catch (e) {
+        dispatch(gameActionCreators.show());
+      }
     };
   },
 
@@ -56,23 +60,26 @@ export const gameActionCreators = {
     config: Partial<WordsearchInput>
   ): ThunkAction<Promise<WordsearchConfig>, GameStoreState, void, any> {
     return async (dispatch, getState): Promise<WordsearchConfig> => {
-      ws.setConfig(config);
-      const wsConfig = ws.getConfig();
-      const state = getState() as any;
-      const payload: Payload<Game> = {
-        data: {
-          id: "",
-          game: { ...state.reducers.GameReducer.current.game },
-          config: { ...wsConfig }
-        }
-      };
+      try {
+        ws.setConfig(config);
+        const wsConfig = ws.getConfig();
+        const state = getState() as any;
+        const payload: Payload<Game> = {
+          data: {
+            id: "",
+            game: { ...state.reducers.GameReducer.current.game },
+            config: { ...wsConfig }
+          }
+        };
 
-      const action: Action<Game> = {
-        type: GameActionTypes.show,
-        payload
-      };
-      dispatch(action);
-
+        const action: Action<Game> = {
+          type: GameActionTypes.show,
+          payload
+        };
+        dispatch(action);
+      } catch (e) {
+        dispatch(gameActionCreators.show());
+      }
       return ws.getConfig();
     };
   },
