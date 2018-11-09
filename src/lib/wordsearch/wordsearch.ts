@@ -12,6 +12,11 @@ export enum WSDirections {
   NONE
 }
 
+export enum WSCase {
+  LOWER,
+  UPPER
+}
+
 export interface WordsConfig {
   /**
    * amount of words to generate
@@ -29,6 +34,11 @@ export interface WordsConfig {
    * list of words to pick from
    */
   dictionary: string[];
+  /**
+   * Upper case or Lower case
+   * this also transforms words in dictionary
+   */
+  case: WSCase;
   /**
    * send debug info to the console?
    */
@@ -118,6 +128,7 @@ export class Wordsearch {
       minLength: 2,
       maxLength: 8,
       dictionary: [...commonEnglishWords],
+      case: WSCase.UPPER,
       debug: true
     },
     allowedDirections: [
@@ -179,6 +190,7 @@ export class Wordsearch {
       config = this.parseStringsInConfig(config);
       this.config = _.mergeWith(this.config, config, takeSrcArray);
     }
+    this.setCase();
     return !!config;
   };
 
@@ -296,6 +308,37 @@ export class Wordsearch {
     this.resetCurrentSelection();
     this.checkEnd();
     return win;
+  };
+
+  /**
+   * sell all letters and words to their corresponding case
+   */
+  private setCase = () => {
+    if (this.output) {
+      this.setAllTo("letter", letter => this.getStrInCase(letter));
+      this.output.words = this.output.words.map(
+        (w: Word): Word => {
+          return {
+            ...w,
+            word: this.getStrInCase(w.word)
+          };
+        }
+      );
+    }
+    this.config.wordsConfig.dictionary = this.config.wordsConfig.dictionary.map(
+      w => this.getStrInCase(w)
+    );
+  };
+
+  /**
+   * gets a string on the configured case
+   * @param {string} str
+   * @returns {string}
+   */
+  private getStrInCase = (str: string): string => {
+    return this.config.wordsConfig.case === WSCase.UPPER
+      ? str.toLocaleUpperCase()
+      : str.toLowerCase();
   };
 
   /**
@@ -445,7 +488,13 @@ export class Wordsearch {
   private setAllTo = (field: string, value: any) => {
     for (let x = 0; x < this.config.size; x++) {
       for (let y = 0; y < this.config.size; y++) {
-        this.output.board[x][y][field] = value;
+        if (typeof value === "function") {
+          this.output.board[x][y][field] = value(
+            this.output.board[x][y][field]
+          );
+        } else {
+          this.output.board[x][y][field] = value;
+        }
       }
     }
   };
@@ -526,7 +575,7 @@ export class Wordsearch {
    * @returns {string}
    */
   private getRandomChar = (): string => {
-    const abc = "abcdefghijklmnopqrstuvwxyz";
+    const abc = this.getStrInCase("abcdefghijklmnopqrstuvwxyz");
     const charPos = this.getRandomInteger(0, abc.length - 1);
     return abc[charPos];
   };

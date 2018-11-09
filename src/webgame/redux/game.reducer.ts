@@ -1,5 +1,6 @@
 import { Action } from "../../common/redux";
 import { Game, GameActionTypes, GameStoreState } from "../game.types";
+import { WSCase } from "../../lib/wordsearch/wordsearch";
 
 export const GameReducer = (
   state: GameStoreState = {
@@ -18,6 +19,7 @@ export const GameReducer = (
           minLength: 0,
           maxLength: 0,
           dictionary: [],
+          case: WSCase.UPPER,
           debug: false
         },
         allowedDirections: [],
