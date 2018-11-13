@@ -384,17 +384,18 @@ export class Wordsearch {
     vector1: Vector2D,
     vector2: Vector2D
   ): WSDirections | null => {
+    let foundDirection: WSDirections | null = null;
     this.allDirections.forEach(direction => {
       let leVector = this.moveInDirection(vector1, direction);
       while (leVector) {
         if (leVector === vector2) {
-          return direction;
+          foundDirection = direction;
         }
         leVector = this.moveInDirection(leVector, direction);
       }
       return;
     });
-    return null;
+    return foundDirection;
   };
 
   /**
