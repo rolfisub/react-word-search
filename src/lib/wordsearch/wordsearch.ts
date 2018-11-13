@@ -1,7 +1,7 @@
 import * as _ from "lodash";
 
 export enum WSDirections {
-  UP,
+  UP = 1,
   DOWN,
   LEFT,
   RIGHT,
@@ -78,6 +78,7 @@ export interface Cell {
   found: boolean;
   selected: boolean;
   selectable: boolean;
+  highlighted: boolean;
 }
 
 export interface Word {
@@ -159,6 +160,8 @@ export class Wordsearch {
   protected output: WordsearchOutput;
 
   private directions2D: Vector2D[] = [
+    //noop
+    { x: 0, y: 0 },
     //up
     { x: -1, y: 0 },
     //down
@@ -182,6 +185,16 @@ export class Wordsearch {
   private selectedCount: number = 0;
   private selectedDirection: WSDirections = WSDirections.NONE;
   private generationTimes: number = 0;
+  private allDirections: WSDirections[] = [
+    WSDirections.DOWN,
+    WSDirections.DOWN_LEFT,
+    WSDirections.DOWN_RIGHT,
+    WSDirections.UP,
+    WSDirections.UP_LEFT,
+    WSDirections.UP_RIGHT,
+    WSDirections.LEFT,
+    WSDirections.RIGHT
+  ];
 
   constructor() {
     this.config = { ...this.defaultConfig };
@@ -341,6 +354,50 @@ export class Wordsearch {
   };
 
   /**
+   * low level highlight cells
+   * @param {Vector2D} from
+   * @param {Vector2D} to
+   */
+  private hightlightCells = (from: Vector2D, to: Vector2D) => {
+    const direction = this.getDirectionFrom2Vectors(from, to);
+    if (direction) {
+      let leVector = this.moveInDirection(from, direction);
+      let found = false;
+      while (leVector && !found) {
+        if (leVector === to) {
+          found = true;
+        }
+        this.output.board[leVector.x][leVector.y].highlighted = true;
+        leVector = this.moveInDirection(leVector, direction);
+      }
+    }
+  };
+
+  /**
+   * tries to determine the direction from point 1 to point 2 else
+   * return null
+   * @param {Vector2D} vector1
+   * @param {Vector2D} vector2
+   * @returns {WSDirections | null}
+   */
+  private getDirectionFrom2Vectors = (
+    vector1: Vector2D,
+    vector2: Vector2D
+  ): WSDirections | null => {
+    this.allDirections.forEach(direction => {
+      let leVector = this.moveInDirection(vector1, direction);
+      while (leVector) {
+        if (leVector === vector2) {
+          return direction;
+        }
+        leVector = this.moveInDirection(leVector, direction);
+      }
+      return;
+    });
+    return null;
+  };
+
+  /**
    * returns the list of words to be used bsed on config
    * @returns {string[]}
    */
@@ -462,9 +519,12 @@ export class Wordsearch {
     if (this.selectedCount === 1 && lastSelection) {
       this.setCellFieldTo("selectable", false);
       this.config.allowedDirections.forEach(wsDirection => {
-        const newVector = this.moveInDirection(lastSelection, wsDirection);
-        if (newVector) {
-          this.output.board[newVector.x][newVector.y].selectable = true;
+        let newVector = this.moveInDirection(lastSelection, wsDirection);
+        while (newVector) {
+          if (newVector) {
+            this.output.board[newVector.x][newVector.y].selectable = true;
+          }
+          newVector = this.moveInDirection(newVector, wsDirection);
         }
       });
     }
@@ -483,12 +543,15 @@ export class Wordsearch {
         if (typeof selectedDirection === "number" && selectedDirection >= 0) {
           const inversedDirection = this.getInverseDirection(selectedDirection);
           if (typeof inversedDirection === "number" && inversedDirection >= 0) {
-            const sVector = this.moveInDirection(
+            let sVector = this.moveInDirection(
               lastSelection,
               inversedDirection
             );
-            if (sVector) {
-              this.output.board[sVector.x][sVector.y].selectable = true;
+            while (sVector) {
+              if (sVector) {
+                this.output.board[sVector.x][sVector.y].selectable = true;
+              }
+              sVector = this.moveInDirection(sVector, inversedDirection);
             }
           }
         }
@@ -913,7 +976,8 @@ export class Wordsearch {
           shown: false,
           found: false,
           selected: false,
-          selectable: true
+          selectable: true,
+          highlighted: false
         });
       }
     }

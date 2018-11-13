@@ -21,6 +21,7 @@ export const GameReducer = (
           maxLength: 0,
           dictionary: [],
           case: WSCase.UPPER,
+          random: false,
           debug: false
         },
         allowedDirections: [],
