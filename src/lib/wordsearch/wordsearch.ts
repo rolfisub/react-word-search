@@ -195,6 +195,7 @@ export class Wordsearch {
     WSDirections.LEFT,
     WSDirections.RIGHT
   ];
+  private lastSelectedVector: Vector2D | null = null;
 
   constructor() {
     this.config = { ...this.defaultConfig };
@@ -302,11 +303,38 @@ export class Wordsearch {
    */
   public selectCell = (pos: Vector2D): boolean => {
     if (this.output.board[pos.x][pos.y].selectable) {
-      this.output.board[pos.x][pos.y].selected = true;
-      this.output.currentWord += this.output.board[pos.x][pos.y].letter;
-      this.selectedCount++;
-      this.calculateSelectables(pos);
-      return true;
+      if (!this.lastSelectedVector) {
+        this.output.board[pos.x][pos.y].selected = true;
+        this.output.currentWord += this.output.board[pos.x][pos.y].letter;
+        this.selectedCount++;
+        this.lastSelectedVector = { ...pos };
+        this.calculateSelectables(pos);
+        return true;
+      } else {
+        const direction = this.getDirectionFrom2Vectors(
+          this.lastSelectedVector,
+          pos
+        );
+        if (direction) {
+          let leVector = this.moveInDirection(
+            this.lastSelectedVector,
+            direction
+          );
+          let found = false;
+          while (leVector && !found) {
+            this.output.board[leVector.x][leVector.y].selected = true;
+            this.output.currentWord += this.output.board[leVector.x][
+              leVector.y
+            ].letter;
+            this.selectedCount++;
+            found = _.isEqual(leVector, pos);
+            leVector = this.moveInDirection(leVector, direction);
+          }
+          this.lastSelectedVector = { ...pos };
+          this.calculateSelectables(pos);
+          return true;
+        }
+      }
     }
     return false;
   };
@@ -318,11 +346,8 @@ export class Wordsearch {
     this.selectedCount = 0;
     this.selectedDirection = WSDirections.NONE;
     this.output.currentWord = "";
-    for (let x = 0; x < this.config.size; x++) {
-      for (let y = 0; y < this.config.size; y++) {
-        this.output.board[x][y].selected = false;
-      }
-    }
+    this.lastSelectedVector = null;
+    this.setCellFieldTo("selected", false);
     this.calculateSelectables();
   };
 
@@ -359,6 +384,9 @@ export class Wordsearch {
    * @param {Vector2D} to
    */
   private hightlightCells = (from: Vector2D, to: Vector2D) => {
+    //reset all cells
+    this.setCellFieldTo("highlighted", false);
+    //draw highlight on new pos if found
     const direction = this.getDirectionFrom2Vectors(from, to);
     if (direction) {
       let leVector = this.moveInDirection(from, direction);
@@ -387,8 +415,8 @@ export class Wordsearch {
     let foundDirection: WSDirections | null = null;
     this.allDirections.forEach(direction => {
       let leVector = this.moveInDirection(vector1, direction);
-      while (leVector) {
-        if (leVector === vector2) {
+      while (leVector && !foundDirection) {
+        if (_.isEqual(leVector, vector2)) {
           foundDirection = direction;
         }
         leVector = this.moveInDirection(leVector, direction);
