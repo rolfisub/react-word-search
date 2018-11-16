@@ -3,6 +3,7 @@ import { WordsearchOutput } from "../../lib/wordsearch/wordsearch";
 import { Cell } from "./cell";
 import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
+import { config } from "../config";
 
 interface BoardProps {
   resetSelection: () => void;
@@ -23,7 +24,12 @@ class BoardClass extends React.Component<BoardProps> {
                 justifyContent: "center"
               }}
             >
-              <div style={{ width: this.props.game.board.length * 22 }}>
+              <div
+                style={{
+                  width: this.props.game.board.length * (config.cellSize + 2),
+                  border: "1px solid"
+                }}
+              >
                 {this.props.game.board.map((arr, x) => {
                   return (
                     <span key={x}>

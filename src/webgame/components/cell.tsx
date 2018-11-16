@@ -6,12 +6,14 @@ import {
 import { CSSProperties } from "react";
 import { connect } from "react-redux";
 import { gameActionCreators } from "../redux/game.actions";
+import { config } from "../config";
 
 const styles: CSSProperties = {
   border: "1px dotted",
-  width: 20,
-  height: 20,
-  fontSize: 20,
+  width: config.cellSize,
+  height: config.cellSize,
+  fontSize: config.cellSize,
+  fontFamily: "Comic Sans MS",
   float: "left",
   margin: 0,
   textAlign: "center"
@@ -79,7 +81,9 @@ class CellClass extends React.Component<CellProps, CellState> {
         onMouseLeave={this.mouseLeave}
         onClick={this.onClick}
         style={{
-          ...(this.state.isHover || this.props.highlighted ? stylesHover : styles),
+          ...(this.state.isHover || this.props.highlighted
+            ? stylesHover
+            : styles),
           ...(this.props.shown ? styleDiscovered : {}),
           ...(this.props.selected ? styleClicked : {}),
           ...(this.props.found ? styleFound : {})
