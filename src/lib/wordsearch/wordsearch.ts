@@ -348,6 +348,7 @@ export class Wordsearch {
     this.output.currentWord = "";
     this.lastSelectedVector = null;
     this.setCellFieldTo("selected", false);
+    this.setCellFieldTo("highlighted", false);
     this.calculateSelectables();
   };
 
@@ -379,6 +380,19 @@ export class Wordsearch {
   };
 
   /**
+   * highlights the cells in between the last selected
+   * and another
+   * @param {Vector2D} pos
+   */
+  public highlightCell = (pos: Vector2D): boolean => {
+    if (this.lastSelectedVector) {
+      this.hightlightCells(this.lastSelectedVector, pos);
+      return true;
+    }
+    return false;
+  };
+
+  /**
    * low level highlight cells
    * @param {Vector2D} from
    * @param {Vector2D} to
@@ -392,9 +406,7 @@ export class Wordsearch {
       let leVector = this.moveInDirection(from, direction);
       let found = false;
       while (leVector && !found) {
-        if (leVector === to) {
-          found = true;
-        }
+        found = _.isEqual(leVector, to);
         this.output.board[leVector.x][leVector.y].highlighted = true;
         leVector = this.moveInDirection(leVector, direction);
       }

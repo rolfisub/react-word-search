@@ -122,6 +122,18 @@ export const gameActionCreators = {
     };
   },
 
+  highlightCell(
+    pos: Vector2D
+  ): ThunkAction<Promise<boolean>, GameStoreState, void, any> {
+    return async dispatch => {
+      const selected = ws.highlightCell(pos);
+      if (selected) {
+        dispatch(gameActionCreators.show());
+      }
+      return selected;
+    };
+  },
+
   resetSelection(): ThunkAction<void, GameStoreState, void, any> {
     return async dispatch => {
       ws.resetCurrentSelection();

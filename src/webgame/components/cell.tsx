@@ -38,6 +38,7 @@ const styleFound: CSSProperties = {
 
 interface CellProps extends CellInterface {
   submitCell: (pos: Vector2D) => void;
+  highlightCell: (pos: Vector2D) => void;
 }
 
 interface CellState {
@@ -54,6 +55,7 @@ class CellClass extends React.Component<CellProps, CellState> {
 
   mouseEnter = () => {
     if (this.props.selectable) {
+      this.props.highlightCell(this.props.pos);
       this.setState({
         isHover: true
       });
@@ -77,7 +79,7 @@ class CellClass extends React.Component<CellProps, CellState> {
         onMouseLeave={this.mouseLeave}
         onClick={this.onClick}
         style={{
-          ...(this.state.isHover ? stylesHover : styles),
+          ...(this.state.isHover || this.props.highlighted ? stylesHover : styles),
           ...(this.props.shown ? styleDiscovered : {}),
           ...(this.props.selected ? styleClicked : {}),
           ...(this.props.found ? styleFound : {})
@@ -95,6 +97,9 @@ const mapDispatchToProps = (dispatch, props) => {
     ...props,
     submitCell: (pos: Vector2D) => {
       dispatch(gameActionCreators.submitCell(pos));
+    },
+    highlightCell: (pos: Vector2D) => {
+      dispatch(gameActionCreators.highlightCell(pos));
     }
   };
 };
