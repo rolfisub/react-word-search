@@ -13,7 +13,7 @@ const styles: CSSProperties = {
   width: config.cellSize,
   height: config.cellSize,
   fontSize: config.cellSize,
-  fontFamily: "Comic Sans MS",
+  fontFamily: config.cellFont,
   float: "left",
   margin: 0,
   textAlign: "center"

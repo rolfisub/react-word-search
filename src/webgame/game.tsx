@@ -5,6 +5,13 @@ import { WordsearchInput } from "../lib/wordsearch/wordsearch";
 import { connect } from "react-redux";
 import { gameActionCreators } from "./redux/game.actions";
 import { Layout } from "./components/layout";
+import * as WebFont from "webfontloader";
+
+WebFont.load({
+  google: {
+    families: config.fonts
+  }
+});
 
 interface GameProps {
   setConfig: (wsConfig: Partial<WordsearchInput>) => void;
