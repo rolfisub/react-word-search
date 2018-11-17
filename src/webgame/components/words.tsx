@@ -2,6 +2,7 @@ import * as React from "react";
 import { WordsearchOutput } from "../../lib/wordsearch/wordsearch";
 import { Word } from "./word";
 import { connect } from "react-redux";
+import { config } from "../config";
 
 interface WordsProps {
   game: WordsearchOutput;
@@ -18,7 +19,11 @@ class WordsClass extends React.Component<WordsProps> {
             justifyContent: "center"
           }}
         >
-          <div>
+          <div
+            style={{
+              maxWidth: config.cellSize * (this.props.game.board.length + 4)
+            }}
+          >
             {this.props.game.words.map((w, i) => {
               return <Word {...w} key={i} />;
             })}

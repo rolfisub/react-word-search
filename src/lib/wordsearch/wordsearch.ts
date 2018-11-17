@@ -284,9 +284,13 @@ export class Wordsearch {
         if (this.generationTimes > 50) {
           this.generationTimes = 0;
           this.throwError(
-            "Unable to generate game, max amount of iterations reached."
+            "Unable to generate game, max amount of iterations reached. " + e.toString()
           );
         } else {
+          console.log(
+            "trying to generate board... try# ",
+            this.generationTimes
+          );
           return this.generate(config);
         }
       }
@@ -1060,11 +1064,16 @@ export class Wordsearch {
    */
   private getRandomWordsFromDictionary = (): string[] => {
     const words: string[] = [];
+    let tries = 100;
     while (words.length < this.config.wordsConfig.amount) {
       const word = this.getRandomWord();
       const shouldWe = this.wordCriteria(word, words);
       if (shouldWe) {
         words.push(word);
+      }
+      tries--;
+      if(!tries) {
+        this.throwError("Not enough words in dictionary.");
       }
     }
 
