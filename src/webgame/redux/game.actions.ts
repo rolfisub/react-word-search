@@ -134,6 +134,13 @@ export const gameActionCreators = {
     };
   },
 
+  unHighlight(): ThunkAction<void, GameStoreState, void, any> {
+    return async dispatch => {
+      ws.unHighlightBoard();
+      dispatch(gameActionCreators.show());
+    };
+  },
+
   resetSelection(): ThunkAction<void, GameStoreState, void, any> {
     return async dispatch => {
       ws.resetCurrentSelection();

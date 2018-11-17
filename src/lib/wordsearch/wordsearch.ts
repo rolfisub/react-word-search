@@ -340,6 +340,13 @@ export class Wordsearch {
   };
 
   /**
+   * unhighlights the board
+   */
+  public unHighlightBoard = () => {
+    this.setCellFieldTo("highlighted", false);
+  };
+
+  /**
    * resets the current selection
    */
   public resetCurrentSelection = () => {

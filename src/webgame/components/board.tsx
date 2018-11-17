@@ -4,10 +4,10 @@ import { Cell } from "./cell";
 import { Grid } from "@material-ui/core";
 import { connect } from "react-redux";
 import { config } from "../config";
+import { gameActionCreators } from "../redux/game.actions";
 
 interface BoardProps {
-  resetSelection: () => void;
-  submitWord: () => void;
+  unHighlightBoard: () => void;
   game: WordsearchOutput;
 }
 
@@ -26,9 +26,10 @@ class BoardClass extends React.Component<BoardProps> {
             >
               <div
                 style={{
-                  width: this.props.game.board.length * (config.cellSize + 4),
+                  width: this.props.game.board.length * (config.cellSize + 4)
                   //border: "1px solid"
                 }}
+                onMouseLeave={this.props.unHighlightBoard}
               >
                 {this.props.game.board.map((arr, x) => {
                   return (
@@ -81,7 +82,12 @@ const mapStateToProps = (state, props) => {
     game: state.reducers.GameReducer.current.game
   };
 };
-const mapDispatchToProps = (dispatch, props) => props;
+const mapDispatchToProps = (dispatch, props) => ({
+  ...props,
+  unHighlightBoard: () => {
+    dispatch(gameActionCreators.unHighlight());
+  }
+});
 
 export const Board = connect(
   mapStateToProps,
