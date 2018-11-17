@@ -9,13 +9,18 @@ import { gameActionCreators } from "../redux/game.actions";
 import { config } from "../config";
 
 const styles: CSSProperties = {
-  border: "1px dotted",
+  border: "1px",
+  borderStyle: "inset",
   width: config.cellSize,
   height: config.cellSize,
   fontSize: config.cellSize,
   fontFamily: config.cellFont,
+  color:"darkblue",
+  backgroundColor: "orange",
+  boxShadow: "3px 3px 2px grey",
+  borderRadius: 7,
   float: "left",
-  margin: 0,
+  margin: 1,
   textAlign: "center"
 };
 

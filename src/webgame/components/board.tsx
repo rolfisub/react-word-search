@@ -26,8 +26,8 @@ class BoardClass extends React.Component<BoardProps> {
             >
               <div
                 style={{
-                  width: this.props.game.board.length * (config.cellSize + 2),
-                  border: "1px solid"
+                  width: this.props.game.board.length * (config.cellSize + 4),
+                  //border: "1px solid"
                 }}
               >
                 {this.props.game.board.map((arr, x) => {
